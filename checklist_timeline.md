@@ -45,8 +45,8 @@ npx shadcn@latest init
 
 #### Day 3-4: Learn ShadCN UI Basics
 
-- [ ] Baca dokumentasi ShadCN UI (1 jam)
-- [ ] Install komponen dasar:
+- [x] Baca dokumentasi ShadCN UI (1 jam)
+- [x] Install komponen dasar:
   ```bash
   npx shadcn@latest add button
   npx shadcn@latest add input
@@ -54,9 +54,9 @@ npx shadcn@latest init
   npx shadcn@latest add dialog
   npx shadcn@latest add label
   ```
-- [ ] Bikin playground page untuk testing komponen
-- [ ] Eksplorasi styling dengan Tailwind classes
-- [ ] Test dark mode toggle
+- [x] Bikin playground page untuk testing komponen
+- [x] Eksplorasi styling dengan Tailwind classes
+- [x] Test dark mode toggle
 
 #### Day 5-6: Learn React Hook Form + Zod
 

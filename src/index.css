@@ -94,7 +94,7 @@
   --muted: rgb(51 65 85);
   --muted-foreground: rgb(156 163 175); /* #9CA3AF = gray-400 */
   --accent: rgb(96 165 250); /* #60A5FA = blue-400 */
-  --accent-foreground: rgb(15 23 42);
+  --accent-foreground: rgb(223, 226, 233);
   --destructive: rgb(239 68 68);
   --border: rgb(51 65 85); /* #334155 = slate-700 */
   --input: rgb(51 65 85);
@@ -120,5 +120,9 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
   }
 }
