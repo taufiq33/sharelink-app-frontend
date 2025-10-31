@@ -60,14 +60,14 @@ npx shadcn@latest init
 
 #### Day 5-6: Learn React Hook Form + Zod
 
-- [ ] Baca dokumentasi RHF (1 jam)
-- [ ] Install RHF + Zod:
+- [x] Baca dokumentasi RHF (1 jam)
+- [x] Install RHF + Zod:
   ```bash
   npm install react-hook-form zod @hookform/resolvers
   ```
-- [ ] Bikin sample form sederhana (login form mockup)
-- [ ] Testing validasi dengan Zod schema
-- [ ] Integrate dengan ShadCN Input component
+- [x] Bikin sample form sederhana (login form mockup)
+- [x] Testing validasi dengan Zod schema
+- [x] Integrate dengan ShadCN Input component
 
 **Deliverable Week 1:** Project structure ready, basic understanding RHF + ShadCN
 
