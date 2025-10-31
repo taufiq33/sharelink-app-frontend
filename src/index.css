@@ -43,7 +43,7 @@
 }
 
 :root {
-  --radius: 1rem;
+  --radius: 0.625rem;
   /* Light Mode - sesuai brief */
   --background: rgb(249 250 251); /* #F9FAFB = gray-50 */
   --foreground: rgb(17 24 39); /* #111827 = gray-900 */
