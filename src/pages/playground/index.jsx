@@ -11,7 +11,6 @@ import {
 } from "@/components/ui/card";
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -27,10 +26,55 @@ import { Link } from "react-router-dom";
 import { EyeIcon } from "lucide-react";
 import { ButtonGroup } from "@/components/ui/button-group";
 import { Textarea } from "@/components/ui/textarea";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import z from "zod";
+import { login } from "@/features/auth/api";
+import { authActions } from "@/features/auth/slices";
+import { useDispatch } from "react-redux";
+
+const schema = z.object({
+  email: z.email().nonempty("please fill this field"),
+  password: z.string().nonempty("please fill this field"),
+});
 
 export default function Playground() {
+  const dispatch = useDispatch();
+  const {
+    register,
+    formState: { errors },
+    handleSubmit,
+    setError,
+  } = useForm({
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+    resolver: zodResolver(schema),
+  });
   function handleToggleDark() {
     document.documentElement.classList.toggle("dark");
+  }
+  async function handleSubmitLogin(data) {
+    try {
+      const submitLogin = await login(data.email, data.password);
+      console.log(submitLogin);
+      dispatch(
+        authActions.saveLoginData({
+          userId: submitLogin.data.user.id,
+          username: submitLogin.data.user.username,
+          email: submitLogin.data.user.email,
+          role: submitLogin.data.user.role,
+          accessToken: submitLogin.data.accessToken,
+        })
+      );
+    } catch (error) {
+      console.error(error);
+      setError("root", {
+        type: "manual",
+        message: error.data.message,
+      });
+    }
   }
   return (
     <div className="p-2 w-9/12 mx-auto mb-10">
@@ -99,7 +143,7 @@ export default function Playground() {
         <h1 className="text-2xl font-bold text-primary p-2">Card</h1>
         <hr className="my-2" />
         <h2 className="my-8 text-xl font-bold text-center">Sharelink App</h2>
-        <form action="">
+        <form onSubmit={handleSubmit((data) => handleSubmitLogin(data))}>
           <Card className="w-full max-w-sm mx-auto">
             <CardHeader className={""}>
               <CardTitle className={"text-xl"}>
@@ -114,12 +158,17 @@ export default function Playground() {
                 <Label htmlFor="email">Email</Label>
                 <Input
                   id="email"
-                  name="email"
+                  {...register("email")}
                   type="email"
                   placeholder="u@example.com"
                   className="bg-secondary"
                   autoComplete="email"
                 />
+                {errors?.email?.message && (
+                  <p className="text-destructive font-bold">
+                    {errors?.email?.message}
+                  </p>
+                )}
               </div>
               <div className="flex flex-col gap-2 justify-center my-4">
                 <Label htmlFor="password">Password</Label>
@@ -128,7 +177,7 @@ export default function Playground() {
                     placeholder="password"
                     type="password"
                     autoComplete="current-password"
-                    name="password"
+                    {...register("password")}
                     id="password"
                     className="bg-secondary"
                   />
@@ -142,10 +191,20 @@ export default function Playground() {
                     <EyeIcon />
                   </Button>
                 </ButtonGroup>
+                {errors?.password?.message && (
+                  <p className="text-destructive font-bold">
+                    {errors?.password?.message}
+                  </p>
+                )}
               </div>
 
               <div className="flex flex-col gap-2 justify-center mt-4 mb-2">
-                <Button>Login</Button>
+                {errors.root && (
+                  <p className="text-destructive font-bold text-center">
+                    {errors.root.message}
+                  </p>
+                )}
+                <Button type="submit">Login</Button>
               </div>
             </CardContent>
             <CardFooter className="flex justify-center">
