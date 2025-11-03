@@ -3,14 +3,18 @@ import axios from "axios";
 
 export async function login(email, password) {
   try {
-    const request = await baseApi.post("/auth/login", {
-      email,
-      password,
-    });
+    const request = await axios.post(
+      baseURLApi + "/auth/login",
+      {
+        email,
+        password,
+      },
+      { withCredentials: true }
+    );
 
     return request.data;
   } catch (error) {
-    return Promise.reject(error);
+    return Promise.reject(error.response.data);
   }
 }
 export async function logout() {
