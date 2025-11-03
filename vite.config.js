@@ -12,4 +12,7 @@ export default defineConfig({
       "@": path.resolve("./src"),
     },
   },
+  server: {
+    port: 4200,
+  },
 });
