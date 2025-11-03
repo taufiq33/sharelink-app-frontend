@@ -77,21 +77,21 @@ npx shadcn@latest init
 
 #### Day 1-2: Axios Setup & Auth Logic
 
-- [ ] Setup axios instance di `lib/axios.js`
-- [ ] Implement interceptor untuk auto-refresh token
-- [ ] Bikin auth utility functions:
+- [x] Setup axios instance di `lib/axios.js`
+- [x] Implement interceptor untuk auto-refresh token
+- [x] Bikin auth utility functions:
   - `saveToken()`, `getToken()`, `removeToken()`
   - `saveRefreshToken()`, `getRefreshToken()`
-- [ ] Test API connection ke backend
+- [x] Test API connection ke backend
 
 #### Day 3-4: Redux Store Setup
 
-- [ ] Setup Redux store di `store/index.js`
-- [ ] Bikin auth slice (`features/auth/slices/authSlice.js`)
+- [x] Setup Redux store di `store/index.js`
+- [x] Bikin auth slice (`features/auth/slices/authSlice.js`)
   - Actions: login, logout, refreshToken, setUser
   - State: user, accessToken, isAuthenticated, loading
-- [ ] Install Redux DevTools
-- [ ] Test Redux flow dengan dummy data
+- [x] Install Redux DevTools
+- [x] Test Redux flow dengan dummy data
 
 #### Day 5-6: Layout Components
 
