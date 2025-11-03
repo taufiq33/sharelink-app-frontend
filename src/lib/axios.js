@@ -3,7 +3,7 @@ import { getAccessToken } from "@/store";
 import { requestNewAccessToken } from "@/features/auth/api";
 import { authActions } from "@/features/auth/slices";
 
-export const baseURLApi = "http://localhost:3000/";
+export const baseURLApi = "http://localhost:3300";
 
 const baseApi = axios.create({
   baseURL: baseURLApi,
