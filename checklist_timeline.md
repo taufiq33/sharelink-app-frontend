@@ -96,7 +96,7 @@ npx shadcn@latest init
 #### Day 5-6: Layout Components
 
 - [ ] Bikin `DashboardLayout.jsx` (Sidebar + Header)
-- [ ] Bikin `PublicLayout.jsx` (Navbar + Footer)
+- [x] Bikin `PublicLayout.jsx` (Navbar + Footer)
 - [ ] Install ShadCN components:
   ```bash
   npx shadcn@latest add avatar
