@@ -4,7 +4,10 @@ import Playground from "@/pages/playground";
 import Rhf from "@/pages/playground/Rhf";
 import RegisterTest from "@/pages/playground/RegisterTest";
 
+import Homepage from "@/pages/public/Homepage";
+
 const router = createBrowserRouter([
+  { path: "/", element: <Homepage /> },
   {
     path: "/playground",
     element: <Playground />,
