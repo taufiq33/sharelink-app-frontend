@@ -5,7 +5,7 @@ import { Outlet } from "react-router-dom";
 
 export default function DashboardLayout() {
   return (
-    <div className="bg-stone-100">
+    <div className="bg-foreground/2">
       <SidebarProvider>
         <AppSidebar />
         <main className="w-full">

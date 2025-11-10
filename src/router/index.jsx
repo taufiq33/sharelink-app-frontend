@@ -8,6 +8,8 @@ import Homepage from "@/pages/public/Homepage";
 import Dashboard from "@/pages/dashboard";
 import PublicLayout from "@/components/layout/PublicLayout";
 import DashboardLayout from "@/components/layout/DashboardLayout";
+import AuthLayout from "@/components/layout/AuthLayout";
+import { authRouter } from "@/features/auth/routes";
 
 const router = createBrowserRouter([
   {
@@ -19,6 +21,12 @@ const router = createBrowserRouter([
         element: <Homepage />,
       },
     ],
+  },
+
+  {
+    path: "/auth",
+    element: <AuthLayout />,
+    children: authRouter,
   },
   {
     path: "/dashboard",
