@@ -20,7 +20,7 @@ export default function LoginForm() {
             <FieldLabel htmlFor="email">Email</FieldLabel>
             <Input
               id="email"
-              autoComplete="username"
+              autoComplete="email"
               placeholder="u@example.com"
               type="email"
               {...form.register("email")}
