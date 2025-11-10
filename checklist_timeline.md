@@ -115,11 +115,11 @@ npx shadcn@latest init
 #### Day 1-2: Login Page
 
 - [x] Bikin `LoginPage.jsx`
-- [ ] Bikin Zod schema untuk login (`lib/formSchema/loginSchema.js`)
-- [ ] Implement login form dengan RHF
-- [ ] Connect ke Redux action (dispatch login)
-- [ ] Handle error & success state
-- [ ] Redirect ke dashboard setelah login
+- [x] Bikin Zod schema untuk login (`lib/formSchema/loginSchema.js`)
+- [x] Implement login form dengan RHF
+- [x] Connect ke Redux action (dispatch login)
+- [x] Handle error & success state
+- [x] Redirect ke dashboard setelah login
 
 #### Day 3-4: Register Page
 

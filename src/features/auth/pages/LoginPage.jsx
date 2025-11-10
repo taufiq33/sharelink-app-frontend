@@ -7,9 +7,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Field, FieldGroup, FieldLabel, FieldSet } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
 import { Link } from "react-router-dom";
+import LoginForm from "../components/LoginForm";
 
 export default function LoginPage() {
   return (
@@ -21,31 +20,7 @@ export default function LoginPage() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <FieldSet>
-          <FieldGroup>
-            <Field>
-              <FieldLabel htmlFor="email">Email</FieldLabel>
-              <Input
-                id="email"
-                autoComplete="username"
-                placeholder="u@example.com"
-                type="email"
-              />
-            </Field>
-            <Field>
-              <FieldLabel htmlFor="password">Password</FieldLabel>
-              <Input
-                type={"password"}
-                id="password"
-                autoComplete="password"
-                placeholder=""
-              />
-            </Field>
-            <Field>
-              <Button>Login</Button>
-            </Field>
-          </FieldGroup>
-        </FieldSet>
+        <LoginForm />
       </CardContent>
       <CardFooter className={"flex items-center justify-center"}>
         <p className="text-sm text-foreground/70">
