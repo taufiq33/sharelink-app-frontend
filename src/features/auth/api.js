@@ -28,7 +28,27 @@ export async function logout() {
     return Promise.reject(error);
   }
 }
-export async function register() {}
+
+export async function register({
+  email,
+  password,
+  username,
+  confirmationPassword,
+}) {
+  try {
+    const request = await axios.post(baseURLApi + "/auth/register", {
+      email,
+      password,
+      username,
+      confirmationPassword,
+    });
+
+    return request.data;
+  } catch (error) {
+    return Promise.reject(error.response.data);
+  }
+}
+
 export async function nextStepRegister() {}
 export async function requestNewAccessToken() {
   try {
