@@ -1,27 +1,47 @@
 import { createBrowserRouter } from "react-router-dom";
 
-import Playground from "@/pages/playground";
-import Rhf from "@/pages/playground/Rhf";
-import RegisterTest from "@/pages/playground/RegisterTest";
+// import Playground from "@/pages/playground";
+// import Rhf from "@/pages/playground/Rhf";
+// import RegisterTest from "@/pages/playground/RegisterTest";
 
 import Homepage from "@/pages/public/Homepage";
 import Dashboard from "@/pages/dashboard";
+import PublicLayout from "@/components/layout/PublicLayout";
+import DashboardLayout from "@/components/layout/DashboardLayout";
 
 const router = createBrowserRouter([
-  { path: "/", element: <Homepage /> },
-  { path: "/dashboard", element: <Dashboard /> },
   {
-    path: "/playground",
-    element: <Playground />,
+    path: "/",
+    element: <PublicLayout />,
+    children: [
+      {
+        index: true,
+        element: <Homepage />,
+      },
+    ],
   },
   {
-    path: "/playground/rhf",
-    element: <Rhf />,
+    path: "/dashboard",
+    element: <DashboardLayout />,
+    children: [
+      {
+        index: true,
+        element: <Dashboard />,
+      },
+    ],
   },
-  {
-    path: "/playground/register",
-    element: <RegisterTest />,
-  },
+  // {
+  //   path: "/playground",
+  //   element: <Playground />,
+  // },
+  // {
+  //   path: "/playground/rhf",
+  //   element: <Rhf />,
+  // },
+  // {
+  //   path: "/playground/register",
+  //   element: <RegisterTest />,
+  // },
 ]);
 
 export default router;
