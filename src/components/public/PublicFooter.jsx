@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 export default function PublicFooter() {
   return (
-    <footer className="mb-50 sm:mb-20 mt-20 h-20 border-t grid grid-cols-1 sm:grid-cols-2 gap-5 md:grid-cols-3 md:gap-3 text-sm p-4 text-stone-500">
+    <footer className="mb-50 sm:mb-20 mt-20 h-20 border-t grid grid-cols-1 sm:grid-cols-2 gap-5 md:grid-cols-3 md:gap-3 text-sm p-4 text-foreground/80 ">
       <div className="brand-footer flex gap-2 flex-col md:flex-row justify-center items-center">
         <img src={BannerImage} className="h-4 w-4" alt="brand" />
         <p className="text-center md:text-left">
@@ -30,7 +30,7 @@ export default function PublicFooter() {
           />
         </svg>
         <svg
-          className="w-4 h-4 hover:text-black"
+          className="w-4 h-4 hover:text-black dark:hover:text-white"
           role="img"
           viewBox="0 0 24 24"
           xmlns="http://www.w3.org/2000/svg"

@@ -19,6 +19,7 @@ import {
 import { BookmarkIcon } from "lucide-react";
 import { Switch } from "../ui/switch";
 import { Label } from "../ui/label";
+import ToggleThemeButton from "../public/ToggleThemeButton";
 
 export default function DashboardHeader() {
   const { toggleSidebar } = useSidebar();
@@ -38,9 +39,8 @@ export default function DashboardHeader() {
         <h2 className="font-bold sm:text-xl">Dashboard</h2>
       </div>
       <div className="push-right flex gap-2 items-center justify-center md:gap-4">
-        <div className="flex justify-center items-center gap-2">
-          <Switch id="dark-mode" />
-          <Label htmlFor="dark-mode">Dark</Label>
+        <div className="flex justify-center items-center">
+          <ToggleThemeButton />
         </div>
 
         <Button variant={"icon"} className="relative md:scale-120">

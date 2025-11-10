@@ -103,7 +103,7 @@ npx shadcn@latest init
   npx shadcn@latest add dropdown-menu
   npx shadcn@latest add separator
   ```
-- [ ] Implement theme toggle (dark mode)
+- [x] Implement theme toggle (dark mode)
 - [ ] Setup React Router dengan layout
 
 **Deliverable Week 2:** Axios configured, Redux working, Layout components ready

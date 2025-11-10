@@ -9,7 +9,7 @@ export default function HomepageCard({ icon, title, description }) {
         </div>
         <CardTitle className={"text-center"}>{title}</CardTitle>
       </CardHeader>
-      <CardContent className={"text-stone-500 text-center text-sm"}>
+      <CardContent className={"text-foreground/80 text-center text-sm"}>
         {description}
       </CardContent>
     </Card>

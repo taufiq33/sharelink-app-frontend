@@ -6,7 +6,7 @@ export default function HomepageBanner() {
       <h2 className="text-center tracking-tighter font-black text-5xl ">
         Share links easily, beautifully
       </h2>
-      <p className="max-w-8/10 text-stone-500 text-center text-lg">
+      <p className="max-w-8/10 text-foreground text-center text-lg">
         Create your personalized page to share all your important links with
         your audience.
       </p>
