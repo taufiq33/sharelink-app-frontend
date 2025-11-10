@@ -123,12 +123,12 @@ npx shadcn@latest init
 
 #### Day 3-4: Register Page
 
-- [ ] Bikin `RegisterPage.jsx`
-- [ ] Bikin Zod schema untuk register
-- [ ] Implement register form dengan RHF
-- [ ] Validasi password confirmation
-- [ ] Connect ke API endpoint
-- [ ] Auto-login setelah register sukses
+- [x] Bikin `RegisterPage.jsx`
+- [x] Bikin Zod schema untuk register
+- [x] Implement register form dengan RHF
+- [x] Validasi password confirmation
+- [x] Connect ke API endpoint
+- [ ] Display Notifikasi sukses register, dan action login.
 
 #### Day 5-6: Protected Routes & Auth Guard
 
