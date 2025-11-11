@@ -136,8 +136,8 @@ npx shadcn@latest init
 - [x] Implement route protection logic
 - [x] Handle redirect ke login jika belum auth
 - [x] Test axios interceptor (auto-refresh token)
-- [ ] Bikin logout functionality
-- [ ] Handle token expiration
+- [x] Bikin logout functionality
+- [x] Handle token expiration
 
 **Deliverable Week 3:** Login & Register working, Protected routes implemented
 

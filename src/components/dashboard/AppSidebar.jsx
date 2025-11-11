@@ -19,6 +19,10 @@ import BannerImage from "@/assets/brand.png";
 import { Button } from "../ui/button";
 import { LogOut } from "lucide-react";
 import { PanelRightOpen } from "lucide-react";
+import { logout } from "@/features/auth/api";
+import { useDispatch } from "react-redux";
+import { authActions } from "@/features/auth/slices";
+import { useNavigate } from "react-router-dom";
 
 const menus = [
   {
@@ -45,6 +49,18 @@ const menus = [
 
 export function AppSidebar() {
   const { toggleSidebar } = useSidebar();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  async function handleLogout() {
+    try {
+      await logout();
+      dispatch(authActions.clearLoginData());
+      navigate("/auth");
+    } catch (error) {
+      console.error(error);
+    }
+  }
   return (
     <Sidebar>
       <SidebarHeader
@@ -82,7 +98,7 @@ export function AppSidebar() {
           <PanelRightOpen />
           Close Sidebar
         </Button>
-        <Button size="lg" variant={"destructive"}>
+        <Button onClick={handleLogout} size="lg" variant={"destructive"}>
           {" "}
           <LogOut />
           Logout
