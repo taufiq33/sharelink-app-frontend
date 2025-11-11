@@ -26,7 +26,7 @@ export default function LoginPage() {
         <p className="text-sm text-foreground/70">
           Don't have an account?{" "}
           <Button className={"p-0 underline"} variant={"link"} asChild>
-            <Link>Sign Up</Link>
+            <Link to="/auth/register">Sign Up</Link>
           </Button>
         </p>
       </CardFooter>

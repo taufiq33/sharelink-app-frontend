@@ -37,7 +37,7 @@ export default function RegisterPage() {
           <p className="text-sm text-foreground/70">
             Already have an account?{" "}
             <Button className={"p-0 underline"} variant={"link"} asChild>
-              <Link>Log In</Link>
+              <Link to="/auth/login">Log In</Link>
             </Button>
           </p>
         )}
