@@ -52,12 +52,17 @@ export async function register({
 export async function nextStepRegister() {}
 export async function requestNewAccessToken() {
   try {
-    const request = await axios.get(baseURLApi + "/auth/token", {
-      withCredentials: true,
-    });
+    const request = await axios.post(
+      baseURLApi + "/auth/token",
+      {},
+      {
+        withCredentials: true,
+      }
+    );
 
-    const newAccessToken = request.data.accessToken;
-    return newAccessToken;
+    const { data } = request.data;
+
+    return data.accessToken;
   } catch (error) {
     return Promise.reject(error);
   }

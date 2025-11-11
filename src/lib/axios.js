@@ -1,7 +1,9 @@
 import axios from "axios";
-import { getAccessToken } from "@/store";
+import { getAccessToken, appStore } from "@/store";
+
 import { requestNewAccessToken } from "@/features/auth/api";
 import { authActions } from "@/features/auth/slices";
+import { saveAndDecodeAccessToken } from "@/features/auth/authCustomActions";
 
 export const baseURLApi = "http://localhost:3300";
 
@@ -28,7 +30,7 @@ async function errorResponseInterceptor(error) {
     try {
       const _newAccessToken = await requestNewAccessToken();
 
-      authActions.saveAccessToken(_newAccessToken.data);
+      appStore.dispatch(saveAndDecodeAccessToken(_newAccessToken));
 
       return baseApi(originalConfig);
     } catch (refreshError) {

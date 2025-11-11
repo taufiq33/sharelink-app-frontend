@@ -132,10 +132,10 @@ npx shadcn@latest init
 
 #### Day 5-6: Protected Routes & Auth Guard
 
-- [ ] Bikin `ProtectedRoute.jsx` component
-- [ ] Implement route protection logic
-- [ ] Handle redirect ke login jika belum auth
-- [ ] Test axios interceptor (auto-refresh token)
+- [x] Bikin `ProtectedRoute.jsx` component
+- [x] Implement route protection logic
+- [x] Handle redirect ke login jika belum auth
+- [x] Test axios interceptor (auto-refresh token)
 - [ ] Bikin logout functionality
 - [ ] Handle token expiration
 
