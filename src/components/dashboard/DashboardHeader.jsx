@@ -16,13 +16,13 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 
-import { BookmarkIcon } from "lucide-react";
-import { Switch } from "../ui/switch";
-import { Label } from "../ui/label";
 import ToggleThemeButton from "../public/ToggleThemeButton";
+import { useSelector } from "react-redux";
+import useLogout from "@/features/auth/hooks/useLogout";
 
 export default function DashboardHeader() {
   const { toggleSidebar } = useSidebar();
+  const user = useSelector((state) => state.auth);
   return (
     <header className="w-full bg-white dark:bg-background flex justify-between items-center p-3 shadow">
       <div className="flex gap-3 items-center">
@@ -52,13 +52,15 @@ export default function DashboardHeader() {
         <DropdownMenu>
           <DropdownMenuTrigger className="avatar lg:flex gap-3 justify-center items-center bg-background p-1 rounded">
             <Avatar className={"scale-90 lg:scale-100"}>
-              <AvatarImage src="https://github.com/shadcn.png" />
+              <AvatarImage
+                src={`http://localhost:3300/public/photoProfile/${user.username}`}
+              />
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
             <div className="user-detail hidden lg:flex flex-col">
-              <h3 className="font-bold">John Doe</h3>
+              <h3 className="font-bold">{user.username}</h3>
               <span className="text-muted-foreground text-sm">
-                john.doe@example.com
+                {user.email}
               </span>
             </div>
           </DropdownMenuTrigger>
@@ -70,7 +72,9 @@ export default function DashboardHeader() {
             <DropdownMenuSeparator />
             <DropdownMenuItem>Profile</DropdownMenuItem>
 
-            <DropdownMenuItem>Logout</DropdownMenuItem>
+            <DropdownMenuItem onClick={useLogout().handleLogout}>
+              Logout
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

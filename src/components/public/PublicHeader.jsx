@@ -12,7 +12,7 @@ export default function PublicHeader() {
       </Link>
       <ToggleThemeButton />
       <div className="hidden header-action sm:flex gap-2">
-        <Link to="/auth/login">
+        <Link to="/dashboard">
           <Button variant={"outline"}>Login</Button>
         </Link>
         <Link to="/auth/register">
