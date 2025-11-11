@@ -13,8 +13,8 @@ import { Spinner } from "@/components/ui/spinner";
 
 import useRegisterForm from "../hooks/useRegisterForm";
 
-export default function RegisterForm() {
-  const { form, handleRegister } = useRegisterForm();
+export default function RegisterForm({ successAction }) {
+  const { form, handleRegister } = useRegisterForm({ action: successAction });
 
   return (
     <FieldSet>

@@ -1,10 +1,9 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import registerSchema from "../schemas/registerSchema";
-import { useNavigate } from "react-router-dom";
 import { register } from "../api";
 
-export default function useRegisterForm() {
+export default function useRegisterForm({ action }) {
   const form = useForm({
     defaultValues: {
       email: "",
@@ -15,12 +14,10 @@ export default function useRegisterForm() {
     resolver: zodResolver(registerSchema),
   });
 
-  const navigate = useNavigate();
-
   async function handleRegister(dataSubmitted) {
     try {
       const { data } = await register(dataSubmitted);
-      navigate("/auth/login");
+      action(data);
     } catch (error) {
       form.setError("root", { type: "manual", message: error.data.message });
     }

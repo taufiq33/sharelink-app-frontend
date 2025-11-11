@@ -8,23 +8,39 @@ import {
 } from "@/components/ui/card";
 import { Link } from "react-router-dom";
 import RegisterForm from "../components/RegisterForm";
+import { useState } from "react";
+import RegisterSuccess from "../components/RegisterSuccess";
 
 export default function RegisterPage() {
+  const [userData, setUserData] = useState(null);
+
+  function successRegisterAction(payload) {
+    setUserData(payload.user);
+  }
+
   return (
-    <Card className={"w-full max-w-[350px]"}>
+    <Card className={"w-full max-w-[550px]"}>
       <CardHeader>
-        <CardTitle className={"text-center"}>Create new Account</CardTitle>
+        <CardTitle className={"text-center"}>
+          {userData ? `Welcome, ${userData.username}!` : "Create new Account"}
+        </CardTitle>
       </CardHeader>
       <CardContent>
-        <RegisterForm />
+        {userData ? (
+          <RegisterSuccess user={userData} />
+        ) : (
+          <RegisterForm successAction={successRegisterAction} />
+        )}
       </CardContent>
       <CardFooter className={"flex items-center justify-center"}>
-        <p className="text-sm text-foreground/70">
-          Already have an account?{" "}
-          <Button className={"p-0 underline"} variant={"link"} asChild>
-            <Link>Log In</Link>
-          </Button>
-        </p>
+        {!userData && (
+          <p className="text-sm text-foreground/70">
+            Already have an account?{" "}
+            <Button className={"p-0 underline"} variant={"link"} asChild>
+              <Link>Log In</Link>
+            </Button>
+          </p>
+        )}
       </CardFooter>
     </Card>
   );

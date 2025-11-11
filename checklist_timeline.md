@@ -128,7 +128,7 @@ npx shadcn@latest init
 - [x] Implement register form dengan RHF
 - [x] Validasi password confirmation
 - [x] Connect ke API endpoint
-- [ ] Display Notifikasi sukses register, dan action login.
+- [x] Display Notifikasi sukses register
 
 #### Day 5-6: Protected Routes & Auth Guard
 
