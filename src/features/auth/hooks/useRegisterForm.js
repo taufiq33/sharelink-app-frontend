@@ -19,7 +19,16 @@ export default function useRegisterForm({ action }) {
       const { data } = await register(dataSubmitted);
       action(data);
     } catch (error) {
-      form.setError("root", { type: "manual", message: error.data.message });
+      if (error.data?.fields) {
+        Object.keys(error.data.fields).forEach((item) => {
+          form.setError(item, {
+            type: "manual",
+            message: error.data.message,
+          });
+        });
+      } else {
+        form.setError("root", { type: "manual", message: error.data.message });
+      }
     }
   }
 
