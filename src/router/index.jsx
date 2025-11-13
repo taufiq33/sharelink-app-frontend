@@ -11,6 +11,7 @@ import DashboardLayout from "@/components/layout/DashboardLayout";
 import AuthLayout from "@/components/layout/AuthLayout";
 import { authRouter } from "@/features/auth/routes";
 import ProtectedRoute from "./ProtectedRoute";
+import LinksByUsername from "@/pages/public/LinksByUsername";
 
 const router = createBrowserRouter([
   {
@@ -22,6 +23,11 @@ const router = createBrowserRouter([
         element: <Homepage />,
       },
     ],
+  },
+
+  {
+    path: "/u/:username",
+    element: <LinksByUsername />,
   },
 
   {

@@ -147,12 +147,12 @@ npx shadcn@latest init
 
 #### Day 1-2: Public Profile Page (`/u/:username`)
 
-- [ ] Bikin `PublicProfilePage.jsx`
-- [ ] Fetch user data & links dari API
-- [ ] Display avatar, username, bio
-- [ ] Render list of active links
-- [ ] Implement click tracking
-- [ ] Mobile responsive design
+- [x] Bikin `PublicProfilePage.jsx`
+- [x] Fetch user data & links dari API
+- [x] Display avatar, username, bio
+- [x] Render list of active links
+- [x] Implement click tracking
+- [x] Mobile responsive design
 
 #### Day 3-4: User Dashboard Home
 
