@@ -51,6 +51,8 @@ const router = createBrowserRouter([
       },
     ],
   },
+  //TODO add error page
+  { path: "*", element: <p>Page not found.</p> },
   // {
   //   path: "/playground",
   //   element: <Playground />,
