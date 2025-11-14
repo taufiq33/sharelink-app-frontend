@@ -156,11 +156,11 @@ npx shadcn@latest init
 
 #### Day 3-4: User Dashboard Home
 
-- [ ] Bikin `DashboardHomePage.jsx`
-- [ ] Fetch user statistics (total links, clicks)
-- [ ] Display stats cards (ShadCN Card)
-- [ ] Bikin recent links table (ShadCN Table)
-- [ ] Install:
+- [x] Bikin `DashboardHomePage.jsx`
+- [x] Fetch user statistics (total links, clicks)
+- [x] Display stats cards (ShadCN Card)
+- [x] Bikin recent links table (ShadCN Table)
+- [x] Install:
   ```bash
   npx shadcn@latest add table
   npx shadcn@latest add badge
