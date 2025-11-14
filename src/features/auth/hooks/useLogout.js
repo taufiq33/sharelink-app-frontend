@@ -14,6 +14,7 @@ function useLogout() {
       navigate("/auth");
     } catch (error) {
       console.error(error);
+      navigate("/auth");
     }
   }
 

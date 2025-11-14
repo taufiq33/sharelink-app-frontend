@@ -10,6 +10,24 @@ export async function getPublicLinksByUsername(username) {
   }
 }
 
+export async function getUserStatistics() {
+  try {
+    const request = await baseApi.get("/me/statistics");
+    return request.data;
+  } catch (error) {
+    return Promise.reject(error.response.data);
+  }
+}
+
+export async function getUserRecentLinks() {
+  try {
+    const request = await baseApi.get("/links?order=DESC");
+    return request.data;
+  } catch (error) {
+    return Promise.reject(error.response.data);
+  }
+}
+
 export async function trackLink(linkId) {
   try {
     const request = await baseApi.post("/public/tracklink", {

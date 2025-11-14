@@ -2,7 +2,6 @@ import axios from "axios";
 import { getAccessToken, appStore } from "@/store";
 
 import { requestNewAccessToken } from "@/features/auth/api";
-import { authActions } from "@/features/auth/slices";
 import { saveAndDecodeAccessToken } from "@/features/auth/authCustomActions";
 
 export const baseURLApi = "http://localhost:3300";
@@ -34,6 +33,7 @@ async function errorResponseInterceptor(error) {
 
       return baseApi(originalConfig);
     } catch (refreshError) {
+      window.location.href("/auth/login");
       return Promise.reject(refreshError);
     }
   }
