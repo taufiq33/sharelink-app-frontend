@@ -168,10 +168,10 @@ npx shadcn@latest init
 
 #### Day 5-6: User Profile & Settings
 
-- [ ] Bikin `SettingsPage.jsx`
-- [ ] Form edit profile (username, bio)
+- [x] Bikin `SettingsPage.jsx`
+- [x] Form edit profile (username, bio)
 - [ ] Upload photo profile (image upload)
-- [ ] Form change password
+- [x] Form change password
 - [ ] Update profile API integration
 
 **Deliverable Week 4:** Public profile live, User dashboard home & settings working

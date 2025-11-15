@@ -10,6 +10,7 @@ import PublicLayout from "@/components/layout/PublicLayout";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import AuthLayout from "@/components/layout/AuthLayout";
 import { authRouter } from "@/features/auth/routes";
+import { userSettingsRoute } from "@/features/user/routes";
 import ProtectedRoute from "./ProtectedRoute";
 import LinksByUsername from "@/pages/public/LinksByUsername";
 
@@ -46,6 +47,10 @@ const router = createBrowserRouter([
           {
             index: true,
             element: <Dashboard />,
+          },
+          {
+            path: "settings",
+            children: userSettingsRoute,
           },
         ],
       },
