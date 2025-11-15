@@ -8,18 +8,30 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarMenuSub,
+  SidebarMenuSubItem,
   useSidebar,
 } from "@/components/ui/sidebar";
 import { Settings } from "lucide-react";
 import { Bell } from "lucide-react";
 import { Link2 } from "lucide-react";
 import { Grid } from "lucide-react";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import BannerImage from "@/assets/brand.png";
 import { Button } from "../ui/button";
 import { LogOut } from "lucide-react";
 import { PanelRightOpen } from "lucide-react";
 import useLogout from "@/features/auth/hooks/useLogout";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "../ui/collapsible";
+import { User2Icon } from "lucide-react";
+
+import { ChevronDown } from "lucide-react";
+import { KeyRound } from "lucide-react";
+import { UsersRound } from "lucide-react";
 
 const menus = [
   {
@@ -37,12 +49,57 @@ const menus = [
     to: "/dashboard/notifications",
     icon: <Bell />,
   },
+];
+
+const settingsSubMenu = [
   {
-    label: "Settings",
-    to: "/dashboard/settings",
-    icon: <Settings />,
+    label: "Profile",
+    to: "/dashboard/settings/profile",
+    icon: <User2Icon />,
+  },
+  {
+    label: "Password",
+    to: "/dashboard/settings/password",
+    icon: <KeyRound />,
+  },
+  {
+    label: "Session",
+    to: "/dashboard/settings/session",
+    icon: <UsersRound />,
   },
 ];
+
+function SidebarMenuItemSettings() {
+  return (
+    <>
+      <Collapsible defaultOpen className="group/collapsible">
+        <SidebarMenuItem>
+          <CollapsibleTrigger asChild>
+            <SidebarMenuButton size="lg">
+              <Settings />
+              <span className={"ml-1"}>Settings</span>
+              <ChevronDown className="" />
+            </SidebarMenuButton>
+          </CollapsibleTrigger>
+          <CollapsibleContent>
+            <SidebarMenuSub>
+              {settingsSubMenu.map((item) => (
+                <SidebarMenuSubItem key={item.label}>
+                  <SidebarMenuButton asChild size="lg">
+                    <NavLink to={item.to}>
+                      {item.icon}
+                      <span className={"ml-1"}>{item.label}</span>
+                    </NavLink>
+                  </SidebarMenuButton>
+                </SidebarMenuSubItem>
+              ))}
+            </SidebarMenuSub>
+          </CollapsibleContent>
+        </SidebarMenuItem>
+      </Collapsible>
+    </>
+  );
+}
 
 export function AppSidebar() {
   const { toggleSidebar } = useSidebar();
@@ -67,13 +124,14 @@ export function AppSidebar() {
                     isActive={menu.label === "Dashboard"}
                     size="lg"
                   >
-                    <Link href={menu.to}>
+                    <NavLink to={menu.to}>
                       {menu.icon}
                       <span className={"ml-1"}>{menu.label}</span>
-                    </Link>
+                    </NavLink>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
+              <SidebarMenuItemSettings />
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
