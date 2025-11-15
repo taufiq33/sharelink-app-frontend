@@ -9,6 +9,7 @@ import { ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import ToggleThemeButton from "@/components/public/ToggleThemeButton";
 import { Megaphone } from "lucide-react";
+import { getUserProfilePictureUrl } from "@/lib/utils";
 
 export default function LinksByUsername() {
   const { username } = useParams();
@@ -56,7 +57,7 @@ export default function LinksByUsername() {
         <>
           <div className="profile-name flex flex-col gap-3 justify-center items-center mb-10">
             <img
-              src={`http://localhost:3300/public/photoProfile/${username}`}
+              src={getUserProfilePictureUrl(username)}
               alt=""
               className="rounded-full w-20 h-20 shadow"
             />

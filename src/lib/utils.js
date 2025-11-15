@@ -1,6 +1,7 @@
 import { clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { v4 } from "uuid";
+import { baseURLApi } from "./axios";
 
 export function cn(...inputs) {
   return twMerge(clsx(inputs));
@@ -25,4 +26,8 @@ export function formatDateTime(date) {
     hour: "2-digit",
     minute: "2-digit",
   }).format(new Date(date));
+}
+
+export function getUserProfilePictureUrl(username) {
+  return `${baseURLApi}/public/photoProfile/${username}`;
 }
