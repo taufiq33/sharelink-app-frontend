@@ -33,7 +33,8 @@ async function errorResponseInterceptor(error) {
 
       return baseApi(originalConfig);
     } catch (refreshError) {
-      window.location.href("/auth/login");
+      console.log("sampe sini");
+      window.location.href = "/auth/login";
       return Promise.reject(refreshError);
     }
   }
