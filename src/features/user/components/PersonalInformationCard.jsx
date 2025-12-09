@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -7,29 +8,76 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Field, FieldLabel, FieldSet } from "@/components/ui/field";
+import { Field, FieldLabel, FieldSet, FieldError } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
-import { useState } from "react";
-import { useEffect } from "react";
-import { fetchMe } from "../api";
+
+import { removePhotoProfile, updateProfile } from "../api";
 import { Spinner } from "@/components/ui/spinner";
+import ChangeProfilePhotos from "./ChangeProfilePhotos";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import updateProfileSchema from "../schemas/UpdateProfileSchema";
+import { toast } from "sonner";
 
-export default function PersonalInformationCard() {
-  const [user, setUser] = useState(null);
-  useEffect(() => {
-    async function fetchUserData() {
-      try {
-        const userData = await fetchMe();
-        setUser(userData);
-      } catch (error) {
-        console.error(error);
+export default function PersonalInformationCard({ user }) {
+  const [isRemoved, setIsRemoved] = useState(false);
+  const {
+    formState: { errors },
+    register,
+    handleSubmit,
+    control,
+    setValue,
+  } = useForm({
+    defaultValues: {
+      email: user?.email,
+      username: user?.username,
+      shortBio: user?.shortBio,
+    },
+    resolver: zodResolver(updateProfileSchema.partial()),
+  });
+
+  async function handleUpdateProfile(data) {
+    try {
+      let submittedData = new FormData();
+
+      Object.keys(data).forEach((key) => {
+        if (key !== "photoProfile") {
+          submittedData.append(key, data[key]);
+        }
+      });
+
+      let apiProperty = {
+        url: "/auth/register/nextStep",
+        method: "POST",
+      };
+
+      if (data.photoProfile && data.photoProfile.length > 0) {
+        submittedData.append("photoProfile", data.photoProfile?.[0]);
+        apiProperty = {
+          url: "/me",
+          method: "PUT",
+        };
       }
-    }
 
-    fetchUserData();
-  }, []);
+      console.log(submittedData);
+      if (isRemoved) {
+        await removePhotoProfile();
+      }
+
+      const { message } = await updateProfile(submittedData, apiProperty);
+
+      toast.success(message);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  function handlePhotoRemoved() {
+    setIsRemoved(true);
+    setValue("photoProfile", []);
+  }
 
   if (!user) return <Spinner />;
   return (
@@ -41,46 +89,72 @@ export default function PersonalInformationCard() {
         </CardDescription>
       </CardHeader>
       <Separator />
-      <CardContent className={"flex flex-col gap-4 justify-start "}>
-        <div className="photo-profile flex flex-col sm:flex-row justify-center sm:justify-start items-center gap-3">
-          <img
-            className="w-20 h-20 rounded-full mr-4"
-            src={user.avatarUrl}
-            alt=""
+      <form onSubmit={handleSubmit(handleUpdateProfile)}>
+        <CardContent className={"flex flex-col gap-4 justify-start "}>
+          <ChangeProfilePhotos
+            isRemoved={isRemoved}
+            handlePhotoRemoved={handlePhotoRemoved}
+            zodControl={control}
+            user={user}
           />
-          <Button size="sm">Change</Button>
-          <Button size="sm" variant={"secondary"}>
-            Remove
-          </Button>
-        </div>
-        <div className="form-username-email mt-2">
-          <FieldSet
-            className={
-              "flex-col sm:flex-row flex gap-4 justify-center items-center"
-            }
+          {errors?.photoProfile?.message && (
+            <p className="text-destructive font-bold">
+              {errors?.photoProfile?.message}
+            </p>
+          )}
+          <div className="form-username-email mt-2">
+            <FieldSet
+              className={
+                "flex-col sm:flex-row flex gap-4 justify-center sm:items-start items-center"
+              }
+            >
+              <Field data-invalid={errors?.username}>
+                <FieldLabel className="text-sm font-medium">
+                  Username
+                </FieldLabel>
+                <Input {...register("username")} defaultValue={user.username} />
+                {errors?.username && (
+                  <FieldError>{errors.username.message}</FieldError>
+                )}
+              </Field>
+              <Field data-invalid={errors?.email}>
+                <FieldLabel className="text-sm font-medium">Email</FieldLabel>
+                <Input {...register("email")} defaultValue={user.email} />
+                {errors?.email && (
+                  <FieldError>{errors.email.message}</FieldError>
+                )}
+              </Field>
+            </FieldSet>
+          </div>
+          <div className="form-username-email mt-2">
+            <FieldSet>
+              <Field data-invalid={errors?.shortBio}>
+                <FieldLabel className="text-sm font-medium">
+                  Short Bio
+                </FieldLabel>
+                <Textarea
+                  {...register("shortBio")}
+                  defaultValue={user.shortBio}
+                />
+                {errors?.shortBio && (
+                  <FieldError>{errors.shortBio.message}</FieldError>
+                )}
+              </Field>
+            </FieldSet>
+          </div>
+        </CardContent>
+        <CardFooter className={"bg-secondary flex gap-4 justify-end p-4 mt-5"}>
+          <Button
+            variant=""
+            className={"bg-accent"}
+            onClick={() => window.location.reload()}
+            type="reset"
           >
-            <Field>
-              <FieldLabel className="text-sm font-medium">Username</FieldLabel>
-              <Input defaultValue={user.username} />
-            </Field>
-            <Field>
-              <FieldLabel className="text-sm font-medium">Email</FieldLabel>
-              <Input defaultValue={user.email} />
-            </Field>
-          </FieldSet>
-        </div>
-        <div className="form-username-email mt-2">
-          <FieldSet>
-            <Field>
-              <FieldLabel className="text-sm font-medium">Short Bio</FieldLabel>
-              <Textarea defaultValue={user.shortBio} />
-            </Field>
-          </FieldSet>
-        </div>
-      </CardContent>
-      <CardFooter className={"bg-secondary flex justify-end p-4"}>
-        <Button>Save Changes</Button>
-      </CardFooter>
+            Cancel Changes
+          </Button>
+          <Button type="submit">Save Changes</Button>
+        </CardFooter>
+      </form>
     </Card>
   );
 }
