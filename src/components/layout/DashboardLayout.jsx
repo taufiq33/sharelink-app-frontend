@@ -2,6 +2,7 @@ import { AppSidebar } from "../dashboard/AppSidebar";
 import DashboardHeader from "../dashboard/DashboardHeader";
 import { SidebarProvider } from "../ui/sidebar";
 import { Outlet } from "react-router-dom";
+import { Toaster } from "../ui/sonner";
 
 export default function DashboardLayout() {
   return (
@@ -15,6 +16,7 @@ export default function DashboardLayout() {
           </div>
         </main>
       </SidebarProvider>
+      <Toaster />
     </div>
   );
 }
