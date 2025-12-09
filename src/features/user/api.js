@@ -30,3 +30,12 @@ export async function removePhotoProfile() {
     return Promise.reject(error.response.data);
   }
 }
+
+export async function updatePassword(payload) {
+  try {
+    const { data } = await baseApi.post("/me/changePassword", payload);
+    return data;
+  } catch (error) {
+    return Promise.reject(error.response.data);
+  }
+}
