@@ -21,7 +21,16 @@ export async function getUserStatistics() {
 
 export async function getUserRecentLinks() {
   try {
-    const request = await baseApi.get("/links?order=DESC");
+    const request = await baseApi.get("/links?sort=DESC");
+    return request.data;
+  } catch (error) {
+    return Promise.reject(error.response.data);
+  }
+}
+
+export async function getUserLinks() {
+  try {
+    const request = await baseApi.get("/links?sortBy=order&sort=ASC&limit=20");
     return request.data;
   } catch (error) {
     return Promise.reject(error.response.data);
@@ -34,6 +43,15 @@ export async function trackLink(linkId) {
       deviceId: getDeviceId(),
       linkId: linkId,
     });
+    return request.data;
+  } catch (error) {
+    return Promise.reject(error.response.data);
+  }
+}
+
+export async function addLink(linkData) {
+  try {
+    const request = await baseApi.post("/links", linkData);
     return request.data;
   } catch (error) {
     return Promise.reject(error.response.data);

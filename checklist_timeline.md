@@ -182,12 +182,12 @@ npx shadcn@latest init
 
 #### Day 1-2: Links CRUD - Create & Read
 
-- [ ] Bikin `LinksPage.jsx`
-- [ ] Fetch & display all user links
-- [ ] Add link dialog (ShadCN Dialog)
-- [ ] Form validation untuk link
-- [ ] Create link API integration
-- [ ] Install:
+- [x] Bikin `LinksPage.jsx`
+- [x] Fetch & display all user links
+- [x] Add link dialog (ShadCN Dialog)
+- [x] Form validation untuk link
+- [x] Create link API integration
+- [x] Install:
   ```bash
   npx shadcn@latest add form
   npx shadcn@latest add switch

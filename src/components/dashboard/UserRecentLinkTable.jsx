@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { Copy } from "lucide-react";
 import {
   Card,
@@ -84,7 +85,9 @@ export default function UserRecentLinkTable({ data }) {
         </Table>
       </CardContent>
       <CardFooter className={"flex justify-center items-center"}>
-        <Button>See All Links</Button>
+        <Link to="/dashboard/links">
+          <Button>See All Links</Button>
+        </Link>
       </CardFooter>
     </Card>
   );
