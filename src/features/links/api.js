@@ -57,3 +57,21 @@ export async function addLink(linkData) {
     return Promise.reject(error.response.data);
   }
 }
+
+export async function deleteLink(linkId) {
+  try {
+    const request = await baseApi.delete(`/links/${linkId}`);
+    return request.data;
+  } catch (error) {
+    return Promise.reject(error.response.data);
+  }
+}
+
+export async function editLink(linkId, linkData) {
+  try {
+    const request = await baseApi.put(`/links/${linkId}`, linkData);
+    return request.data;
+  } catch (error) {
+    return Promise.reject(error.response.data);
+  }
+}
