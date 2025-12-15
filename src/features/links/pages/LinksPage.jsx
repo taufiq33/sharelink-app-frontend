@@ -9,24 +9,32 @@ import {
 } from "@/components/ui/dialog";
 import { Field, FieldError, FieldLabel, FieldSet } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { ChartNoAxesColumn } from "lucide-react";
-import { TrashIcon } from "lucide-react";
-import { PenIcon } from "lucide-react";
-import { Link } from "lucide-react";
-import { GripVertical } from "lucide-react";
-import { PlusIcon } from "lucide-react";
+
 import { useEffect } from "react";
 import { useState } from "react";
-import { addLink, getUserLinks } from "../api";
+import { addLink, deleteLink, editLink, getUserLinks } from "../api";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { addLinkSchema } from "../schemas/addLinkSchema";
 import { toast } from "sonner";
 
+import { DndContext, closestCenter } from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+
+import SortableLinkItem from "../components/SortableLinkItem";
+import AddLinkDialog from "../components/AddLinkDialog";
+
 export default function LinksPage() {
   const [links, setLinks] = useState([]);
-  const [addDialogOpen, setAddDialogOpen] = useState(false);
-  const addLinkForm = useForm({
+
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [selectedEditId, setSelectedEditId] = useState(null);
+
+  const editLinkForm = useForm({
     resolver: zodResolver(addLinkSchema),
   });
 
@@ -45,11 +53,56 @@ export default function LinksPage() {
       toast.success(data.message);
 
       await getLinks();
-      addLinkForm.reset();
-      setAddDialogOpen(false);
     } catch (error) {
       console.error(error);
+      toast.error(JSON.stringify(error));
     }
+  }
+
+  async function handleDeleteLink(linkId) {
+    try {
+      const { data } = await deleteLink(linkId);
+      toast.success(data.message);
+
+      await getLinks();
+    } catch (error) {
+      console.error(error);
+      toast.error(JSON.stringify(error));
+    }
+  }
+
+  async function handleEditLink(linkData) {
+    try {
+      const { data } = await editLink(selectedEditId, linkData);
+      toast.success(data.message);
+
+      await getLinks();
+      editLinkForm.reset();
+      setEditDialogOpen(false);
+    } catch (error) {
+      console.error(error);
+      toast.error(JSON.stringify(error));
+    }
+  }
+
+  function handleEditButtonClick(id) {
+    setSelectedEditId(id);
+    editLinkForm.reset();
+    setEditDialogOpen(true);
+  }
+
+  function hanldeDragEnd(event) {
+    const { active, over } = event;
+    if (!over || active.id === over.id) return;
+
+    setLinks((items) => {
+      const oldIndex = items.findIndex((i) => i.id === active.id);
+      const newIndex = items.findIndex((i) => i.id === over.id);
+
+      return arrayMove(items, oldIndex, newIndex);
+    });
+
+    console.log("drag end");
   }
 
   return (
@@ -61,56 +114,59 @@ export default function LinksPage() {
             Manage and reorder your shared links below.
           </p>
         </div>
-        <Dialog
-          open={addDialogOpen}
-          onOpenChange={setAddDialogOpen}
-          className="addLinkDialog"
-        >
-          <DialogTrigger asChild>
-            <Button>
-              <PlusIcon /> Add New Link
-            </Button>
-          </DialogTrigger>
 
-          <DialogContent>
-            <DialogHeader className={"font-bold text-lg mb-5"}>
-              <DialogTitle>Add new link</DialogTitle>
-              <DialogDescription>
-                New Link will be placed at the end of the list order, you can
-                drag it to a specific order later.
-                {addLinkForm.formState.errors?.root && (
-                  <div>
-                    <p className="text-destructive">
-                      {addLinkForm.formState.errors?.root.message}
-                    </p>
-                  </div>
-                )}
-              </DialogDescription>
-            </DialogHeader>
-            <div>
-              <form onSubmit={addLinkForm.handleSubmit(handleAddLink)}>
+        <AddLinkDialog onHandleAddLink={handleAddLink} />
+      </div>
+
+      <Dialog
+        open={editDialogOpen}
+        onOpenChange={setEditDialogOpen}
+        className="editLinkDialog"
+      >
+        <DialogContent>
+          <DialogHeader className={"font-bold text-lg mb-5"}>
+            <DialogTitle>Edit link</DialogTitle>
+            <DialogDescription>
+              {editLinkForm.formState.errors?.root && (
+                <div>
+                  <p className="text-destructive">
+                    {editLinkForm.formState.errors?.root.message}
+                  </p>
+                </div>
+              )}
+            </DialogDescription>
+          </DialogHeader>
+          <div>
+            {selectedEditId && (
+              <form onSubmit={editLinkForm.handleSubmit(handleEditLink)}>
                 <FieldSet>
                   <Field>
                     <FieldLabel>Label</FieldLabel>
                     <Input
-                      {...addLinkForm.register("label")}
+                      {...editLinkForm.register("label")}
                       placeholder="type a label for this link"
+                      defaultValue={
+                        links.find((item) => item.id === selectedEditId).label
+                      }
                     />
-                    {addLinkForm.formState.errors?.label && (
+                    {editLinkForm.formState.errors?.label && (
                       <FieldError>
-                        {addLinkForm.formState.errors?.label.message}
+                        {editLinkForm.formState.errors?.label.message}
                       </FieldError>
                     )}
                   </Field>
                   <Field>
                     <FieldLabel>Link</FieldLabel>
                     <Input
-                      {...addLinkForm.register("link")}
+                      {...editLinkForm.register("link")}
                       placeholder="https://example.com"
+                      defaultValue={
+                        links.find((item) => item.id === selectedEditId).link
+                      }
                     />
-                    {addLinkForm.formState.errors?.link && (
+                    {editLinkForm.formState.errors?.link && (
                       <FieldError>
-                        {addLinkForm.formState.errors?.link.message}
+                        {editLinkForm.formState.errors?.link.message}
                       </FieldError>
                     )}
                   </Field>
@@ -121,50 +177,30 @@ export default function LinksPage() {
                   </Field>
                 </FieldSet>
               </form>
-            </div>
-          </DialogContent>
-        </Dialog>
-      </div>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
 
       <div className="draggable-links flex flex-col gap-4 p-1 mt-5">
-        {links.map((item) => {
-          return (
-            <div
-              key={item.id}
-              className="draggable-link-item bg-white dark:bg-background flex justify-between items-center p-2 rounded-lg shadow-xl "
-              draggable="true"
-            >
-              <div className="link-section flex items-center justify-around gap-4 p-1">
-                <GripVertical className="cursor-grab" />
-                <span className="p-3 bg-secondary rounded-full">
-                  <Link />
-                </span>
-
-                <div className="link-label">
-                  <h3 className="font-bold">{item.label}</h3>
-                  <a
-                    className="text-muted-foreground text-sm"
-                    href={item.link}
-                    target="_blank"
-                  >
-                    {item.link}
-                  </a>
-                </div>
-                <Button
-                  variant={"secondary"}
-                  className="rounded-lg p-1 text-xs"
-                  size="xs"
-                >
-                  <ChartNoAxesColumn /> <b>{item.clickCount}</b> clicks
-                </Button>
-              </div>
-              <div className="action-section flex gap-4 mr-4">
-                <PenIcon className="scale-70" />
-                <TrashIcon className="scale-70" />
-              </div>
-            </div>
-          );
-        })}
+        <DndContext
+          collisionDetection={closestCenter}
+          onDragEnd={hanldeDragEnd}
+        >
+          <SortableContext
+            strategy={verticalListSortingStrategy}
+            items={links.map((link) => link.id)}
+          >
+            {links.map((item) => (
+              <SortableLinkItem
+                key={item.id}
+                item={item}
+                onEditButtonClick={handleEditButtonClick}
+                onHandleDeleteLink={handleDeleteLink}
+              />
+            ))}
+          </SortableContext>
+        </DndContext>
       </div>
     </div>
   );
