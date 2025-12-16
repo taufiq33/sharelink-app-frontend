@@ -29,9 +29,12 @@ import {
 } from "../ui/collapsible";
 import { User2Icon } from "lucide-react";
 
+import { useLocation } from "react-router-dom";
+
 import { ChevronDown } from "lucide-react";
 import { KeyRound } from "lucide-react";
 import { UsersRound } from "lucide-react";
+import { useEffect } from "react";
 
 const menus = [
   {
@@ -102,7 +105,13 @@ function SidebarMenuItemSettings() {
 }
 
 export function AppSidebar() {
-  const { toggleSidebar } = useSidebar();
+  const { toggleSidebar, setOpenMobile, isMobile } = useSidebar();
+  const location = useLocation();
+  useEffect(() => {
+    if (isMobile) {
+      setOpenMobile(false);
+    }
+  }, [location.pathname, isMobile, setOpenMobile]);
 
   return (
     <Sidebar>
