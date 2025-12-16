@@ -75,3 +75,12 @@ export async function editLink(linkId, linkData) {
     return Promise.reject(error.response.data);
   }
 }
+
+export async function saveOrder(arrayOfLinksId) {
+  try {
+    const request = await baseApi.put("/links/reorder", arrayOfLinksId);
+    return request.data;
+  } catch (error) {
+    return Promise.reject(error.response.data);
+  }
+}

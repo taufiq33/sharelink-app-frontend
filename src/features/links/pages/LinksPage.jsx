@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/button";
 import {
   DialogContent,
-  DialogTrigger,
   Dialog,
   DialogHeader,
   DialogDescription,
@@ -12,13 +11,21 @@ import { Input } from "@/components/ui/input";
 
 import { useEffect } from "react";
 import { useState } from "react";
-import { addLink, deleteLink, editLink, getUserLinks } from "../api";
+import { addLink, deleteLink, editLink, getUserLinks, saveOrder } from "../api";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { addLinkSchema } from "../schemas/addLinkSchema";
 import { toast } from "sonner";
 
-import { DndContext, closestCenter } from "@dnd-kit/core";
+import {
+  DndContext,
+  PointerSensor,
+  TouchSensor,
+  closestCenter,
+  pointerWithin,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
 import {
   arrayMove,
   SortableContext,
@@ -30,9 +37,18 @@ import AddLinkDialog from "../components/AddLinkDialog";
 
 export default function LinksPage() {
   const [links, setLinks] = useState([]);
-
+  const [orderChange, setOrderChange] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [selectedEditId, setSelectedEditId] = useState(null);
+
+  const touchSensor = useSensor(TouchSensor);
+  const defaultSensor = useSensor(PointerSensor);
+
+  const isTouchDevice =
+    typeof window !== "undefined" &&
+    window.matchMedia("(pointer: coarse)").matches;
+
+  const sensors = useSensors(isTouchDevice ? touchSensor : defaultSensor);
 
   const editLinkForm = useForm({
     resolver: zodResolver(addLinkSchema),
@@ -102,16 +118,51 @@ export default function LinksPage() {
       return arrayMove(items, oldIndex, newIndex);
     });
 
+    setOrderChange(true);
+
     console.log("drag end");
   }
 
+  async function handleSaveOrder() {
+    try {
+      const order = links.map((item) => item.id);
+      const { data } = await saveOrder({ links: order });
+      toast.success(data.message);
+      setOrderChange(false);
+    } catch (error) {
+      console.error(error);
+      toast.error(JSON.stringify(error));
+    }
+  }
+
+  function handleUpOrder(index) {
+    if (index === 0) return;
+
+    setLinks((items) => {
+      return arrayMove(items, index, index - 1);
+    });
+
+    setOrderChange(true);
+  }
+
+  function handleDownOrder(index) {
+    if (index === links.length - 1) return;
+
+    setLinks((items) => {
+      return arrayMove(items, index, index + 1);
+    });
+
+    setOrderChange(true);
+  }
+
   return (
-    <div className="container p-2 max-w-[800px] w-full mx-auto">
-      <div className="title-heading flex justify-between items-center">
+    <div className="container p-2 ">
+      <div className="title-heading flex flex-col md:flex-row  md:justify-between justify-center items-start gap-2 md:items-center">
         <div className="main-heading flex flex-col gap-4">
           <h2 className="text-2xl font-black">My Links</h2>
           <p className="text-sm text-muted-foreground">
-            Manage and reorder your shared links below.
+            Manage and reorder your shared links below. Drag or use up/down
+            button to adjust the order position.
           </p>
         </div>
 
@@ -183,20 +234,39 @@ export default function LinksPage() {
       </Dialog>
 
       <div className="draggable-links flex flex-col gap-4 p-1 mt-5">
+        {orderChange && (
+          <div className="flex gap-2 mx-auto">
+            <Button
+              onClick={() => {
+                getLinks();
+                setOrderChange(false);
+              }}
+              className={"max-w-fit mx-auto bg-destructive"}
+            >
+              Cancel changes
+            </Button>
+            <Button onClick={handleSaveOrder} className={"max-w-fit "}>
+              Save Order
+            </Button>
+          </div>
+        )}
         <DndContext
-          collisionDetection={closestCenter}
+          collisionDetection={isTouchDevice ? pointerWithin : closestCenter}
           onDragEnd={hanldeDragEnd}
+          sensors={sensors}
         >
           <SortableContext
             strategy={verticalListSortingStrategy}
             items={links.map((link) => link.id)}
           >
-            {links.map((item) => (
+            {links.map((item, index) => (
               <SortableLinkItem
                 key={item.id}
                 item={item}
                 onEditButtonClick={handleEditButtonClick}
                 onHandleDeleteLink={handleDeleteLink}
+                onUpOrder={() => handleUpOrder(index)}
+                onDownOrder={() => handleDownOrder(index)}
               />
             ))}
           </SortableContext>
