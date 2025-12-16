@@ -4,7 +4,9 @@ import { getAccessToken, appStore } from "@/store";
 import { requestNewAccessToken } from "@/features/auth/api";
 import { saveAndDecodeAccessToken } from "@/features/auth/authCustomActions";
 
-export const baseURLApi = "http://localhost:3300";
+// // export const baseURLApi = "http://localhost:3300";
+// export const baseURLApi = "http://10.193.230.216:3300";
+export const baseURLApi = import.meta.env.VITE_API_BASE_URL;
 
 const baseApi = axios.create({
   baseURL: baseURLApi,
