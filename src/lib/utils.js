@@ -2,6 +2,7 @@ import { clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { v4 } from "uuid";
 import { baseURLApi } from "./axios";
+import { formatDistanceToNow, isYesterday, isToday, format } from "date-fns";
 
 export function cn(...inputs) {
   return twMerge(clsx(inputs));
@@ -19,13 +20,17 @@ export function getDeviceId() {
 }
 
 export function formatDateTime(date) {
-  return new Intl.DateTimeFormat("en-US", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  }).format(new Date(date));
+  const d = new Date(date);
+
+  if (isToday(d)) {
+    return formatDistanceToNow(d, { addSuffix: true });
+  }
+
+  if (isYesterday(d)) {
+    return "yesterday";
+  }
+
+  return format(d, "dd MMM yyyy, p");
 }
 
 export function getUserProfilePictureUrl(username) {

@@ -12,6 +12,7 @@ import AuthLayout from "@/components/layout/AuthLayout";
 import { authRouter } from "@/features/auth/routes";
 import { userSettingsRoute } from "@/features/user/routes";
 import linksDashboardRoute from "@/features/links/routes";
+import notificationsRoute from "@/features/notification/routes";
 import ProtectedRoute from "./ProtectedRoute";
 import LinksByUsername from "@/pages/public/LinksByUsername";
 
@@ -56,6 +57,10 @@ const router = createBrowserRouter([
           {
             path: "links",
             children: linksDashboardRoute,
+          },
+          {
+            path: "notifications",
+            children: notificationsRoute,
           },
         ],
       },
