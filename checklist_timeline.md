@@ -223,11 +223,11 @@ npx shadcn@latest init
 
 #### Day 1-2: Notifications List
 
-- [ ] Bikin `NotificationsPage.jsx`
-- [ ] Fetch notifications dari API
-- [ ] Display notification list
-- [ ] Mark as read functionality
-- [ ] Redirect to URL on click
+- [x] Bikin `NotificationsPage.jsx`
+- [x] Fetch notifications dari API
+- [x] Display notification list
+- [x] Mark as read functionality
+- [x] Redirect to URL on click
 
 #### Day 3-4: Notification Bell & Polling
 
