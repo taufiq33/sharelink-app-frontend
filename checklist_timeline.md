@@ -195,13 +195,13 @@ npx shadcn@latest init
 
 #### Day 3-4: Links CRUD - Update & Delete
 
-- [ ] Edit link dialog
-- [ ] Update link API integration
-- [ ] Delete confirmation dialog
-- [ ] Delete link API integration
+- [x] Edit link dialog
+- [x] Update link API integration
+- [x] Delete confirmation dialog
+- [x] Delete link API integration
 - [ ] Toggle active/inactive link
-- [ ] Show success/error toast
-- [ ] Install:
+- [x] Show success/error toast
+- [x] Install:
   ```bash
   npx shadcn@latest add toast
   npx shadcn@latest add alert-dialog
@@ -209,11 +209,11 @@ npx shadcn@latest init
 
 #### Day 5-6: Drag & Drop Reorder
 
-- [ ] Install react-beautiful-dnd atau @dnd-kit/core
-- [ ] Implement drag & drop functionality
-- [ ] Update order API integration
-- [ ] Handle loading state saat reorder
-- [ ] Add visual feedback (drag indicator)
+- [x] Install react-beautiful-dnd atau @dnd-kit/core
+- [x] Implement drag & drop functionality
+- [x] Update order API integration
+- [x] Handle loading state saat reorder
+- [x] Add visual feedback (drag indicator)
 
 **Deliverable Week 5:** Full CRUD links working, Reorder implemented
 
