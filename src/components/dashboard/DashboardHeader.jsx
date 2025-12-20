@@ -19,6 +19,7 @@ import {
 import ToggleThemeButton from "../public/ToggleThemeButton";
 import { useSelector } from "react-redux";
 import useLogout from "@/features/auth/hooks/useLogout";
+import NotificationBell from "@/features/notification/components/NotificationBell";
 
 export default function DashboardHeader() {
   const { toggleSidebar } = useSidebar();
@@ -43,11 +44,7 @@ export default function DashboardHeader() {
           <ToggleThemeButton />
         </div>
 
-        <Button variant={"icon"} className="relative md:scale-120">
-          <Bell />
-
-          <span className="absolute top-1 right-1 h-2 w-2 rounded-full bg-red-500 ring-2 ring-background" />
-        </Button>
+        <NotificationBell />
 
         <DropdownMenu>
           <DropdownMenuTrigger className="avatar lg:flex gap-3 justify-center items-center bg-background p-1 rounded">
