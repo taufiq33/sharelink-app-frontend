@@ -231,11 +231,11 @@ npx shadcn@latest init
 
 #### Day 3-4: Notification Bell & Polling
 
-- [ ] Bikin `NotificationBell.jsx` component
-- [ ] Show unread badge count
-- [ ] Implement polling (30 detik interval)
-- [ ] Dropdown preview (latest 5 notifs)
-- [ ] Install:
+- [x] Bikin `NotificationBell.jsx` component
+- [x] Show unread badge count
+- [x] Implement polling (30 detik interval)
+- [x] Dropdown preview (latest 5 notifs)
+- [x] Install:
   ```bash
   npx shadcn@latest add popover
   ```
