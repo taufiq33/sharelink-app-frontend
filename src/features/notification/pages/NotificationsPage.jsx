@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Bell } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { formatDateTime } from "@/lib/utils";
 import { Clock4 } from "lucide-react";
 import {
@@ -12,69 +12,57 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { useState } from "react";
+
 import { BellOff } from "lucide-react";
+
+import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { readNotification } from "../notificationsCustomActions";
+import AlertDialogReadAllConfirmation from "../components/AlertDialogReadAllConfirmation";
 import { useEffect } from "react";
-import { toast } from "sonner";
-import {
-  getNotificationsByUser,
-  markAllNotificationAsRead,
-  markNotificationAsRead,
-} from "../api";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+import { useState } from "react";
+import { useCallback } from "react";
 
 export default function NotificationsPage() {
-  const [notifications, setNotifications] = useState([]);
+  const [searchParams] = useSearchParams();
+  const [selectedNotificationId, setSelectedNotificationId] = useState(null);
+  const [detailNotificationDialogOpen, setDetailNotificationDialogOpen] =
+    useState(false);
 
-  async function fetchNotifications() {
-    try {
-      const { data } = await getNotificationsByUser();
-      setNotifications(data.notifications);
-    } catch (error) {
-      console.error(error);
-      toast.error(JSON.stringify(error));
-    }
-  }
+  const { items: notifications, unreadCount } = useSelector(
+    (state) => state.notifications
+  );
 
-  async function handleAsRead(notificationId, silent = true) {
-    try {
-      const { data } = await markNotificationAsRead(notificationId);
-      if (!silent) {
-        toast.success(data.message);
-      }
-      await fetchNotifications();
-    } catch (error) {
-      console.error(error);
-      toast.error(JSON.stringify(error));
-    }
-  }
+  const dispatch = useDispatch();
 
-  async function handleAllAsRead() {
-    try {
-      const { data } = await markAllNotificationAsRead();
+  const handleAsRead = useCallback(
+    (notificationId, silent = true) => {
+      dispatch(readNotification(notificationId, silent));
+    },
+    [dispatch]
+  );
 
-      toast.success(data.message);
-
-      await fetchNotifications();
-    } catch (error) {
-      console.error(error);
-      toast.error(JSON.stringify(error));
-    }
-  }
+  const handleSelectedNotificationOpen = useCallback(
+    (id) => {
+      const item = notifications.find((item) => item.id === id);
+      if (!item) return;
+      !item.isRead && handleAsRead(item.id);
+      setSelectedNotificationId(id);
+      setDetailNotificationDialogOpen(true);
+    },
+    [handleAsRead, notifications]
+  );
 
   useEffect(() => {
-    fetchNotifications();
-  }, []);
+    if (searchParams.get("id") && searchParams.get("id") !== "") {
+      handleSelectedNotificationOpen(searchParams.get("id"));
+    }
+  }, [searchParams, handleSelectedNotificationOpen]);
+
+  const selectedNotification = notifications.find(
+    (item) => item.id === selectedNotificationId
+  );
+
   return (
     <div className="container p-2 ">
       <div className="title-heading flex flex-col md:flex-row  md:justify-between justify-center items-start gap-2 md:items-center">
@@ -85,30 +73,7 @@ export default function NotificationsPage() {
           </p>
         </div>
 
-        {notifications &&
-          notifications.some((item) => item.isRead === false) && (
-            <AlertDialog>
-              <AlertDialogTrigger asChild>
-                <Button> Mark All as Read </Button>
-              </AlertDialogTrigger>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>
-                    Are you sure to mark <b>all notifications</b> as read?
-                  </AlertDialogTitle>
-                  <AlertDialogDescription>
-                    This action cannot be undone.
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel>Cancel</AlertDialogCancel>
-                  <AlertDialogAction onClick={handleAllAsRead}>
-                    Continue
-                  </AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
-          )}
+        {unreadCount > 0 && <AlertDialogReadAllConfirmation />}
       </div>
 
       <div className="notification-lists flex gap-6 flex-col justify-center items-start mt-5 max-w-9/10 mx-auto">
@@ -118,6 +83,31 @@ export default function NotificationsPage() {
             <p className="text-sm">You have no new notifications.</p>
             <p className="text-sm">Come back later to see your updates.</p>
           </div>
+        )}
+        {selectedNotification && (
+          <Dialog
+            open={detailNotificationDialogOpen}
+            onOpenChange={setDetailNotificationDialogOpen}
+          >
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>{selectedNotification.title}</DialogTitle>
+                <DialogDescription>
+                  {formatDateTime(selectedNotification.createdAt)}
+                </DialogDescription>
+              </DialogHeader>
+              <p>{selectedNotification.message}</p>
+              <DialogFooter>
+                {selectedNotification.redirectUrl && (
+                  <Button>
+                    <Link to={selectedNotification.redirectUrl}>
+                      Check item
+                    </Link>
+                  </Button>
+                )}
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         )}
         {notifications.map((item) => (
           <div
@@ -131,8 +121,10 @@ export default function NotificationsPage() {
             </span>
             <div className="notification-content flex-2/4">
               <h3 className="font-bold underline">{item.title}</h3>
-              <p className="text-accent/60 text-sm">
-                {item.message}{" "}
+              <p className="text-accent/60 text-sm md:flex gap-1">
+                <span className="max-w-[250px] truncate block">
+                  {item.message}
+                </span>
                 <span className="text-foreground/50 ">
                   <Clock4 className="inline w-3 h-3 mx-1" />
                   {formatDateTime(item.createdAt)}
@@ -140,27 +132,16 @@ export default function NotificationsPage() {
               </p>
             </div>
             <div>
-              <Dialog>
-                <DialogTrigger asChild variant={"outline"}>
-                  <Button onClick={() => handleAsRead(item.id)}> Detail</Button>
-                </DialogTrigger>
-                <DialogContent>
-                  <DialogHeader>
-                    <DialogTitle>{item.title}</DialogTitle>
-                    <DialogDescription>
-                      {formatDateTime(item.createdAt)}
-                    </DialogDescription>
-                  </DialogHeader>
-                  <p>{item.message}</p>
-                  <DialogFooter>
-                    {item.redirectUrl && (
-                      <Button>
-                        <Link to={item.redirectUrl}>Check item</Link>
-                      </Button>
-                    )}
-                  </DialogFooter>
-                </DialogContent>
-              </Dialog>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  handleSelectedNotificationOpen(item.id);
+                }}
+              >
+                {" "}
+                Detail
+              </Button>
+
               {!item.isRead && (
                 <Button
                   onClick={() => {
