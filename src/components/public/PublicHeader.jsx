@@ -11,12 +11,20 @@ export default function PublicHeader() {
         <h1 className="font-bold text-xl sm:text-2xl">ShareLink</h1>
       </Link>
       <ToggleThemeButton />
-      <div className="hidden header-action sm:flex gap-2">
+      {/* Desktop auth */}
+      <div className="hidden sm:flex gap-2">
         <Link to="/dashboard">
-          <Button variant={"outline"}>Login</Button>
+          <Button variant="outline">Login</Button>
         </Link>
         <Link to="/auth/register">
           <Button>Register</Button>
+        </Link>
+      </div>
+
+      {/* Mobile auth */}
+      <div className="sm:hidden">
+        <Link to="/dashboard">
+          <Button variant="outline">Login</Button>
         </Link>
       </div>
     </header>

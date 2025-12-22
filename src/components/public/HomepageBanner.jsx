@@ -1,4 +1,5 @@
 import { Button } from "../ui/button";
+import { Link } from "react-router-dom";
 
 export default function HomepageBanner() {
   return (
@@ -10,7 +11,9 @@ export default function HomepageBanner() {
         Create your personalized page to share all your important links with
         your audience.
       </p>
-      <Button size="lg">Get Started</Button>
+      <Button size="lg">
+        <Link to="/auth/register">Get Started</Link>
+      </Button>
     </div>
   );
 }
