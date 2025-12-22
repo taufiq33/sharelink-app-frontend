@@ -16,6 +16,7 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 
+import { Link } from "react-router-dom";
 import ToggleThemeButton from "../public/ToggleThemeButton";
 import { useSelector } from "react-redux";
 import useLogout from "@/features/auth/hooks/useLogout";
@@ -67,7 +68,9 @@ export default function DashboardHeader() {
           >
             <DropdownMenuLabel>My Account</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Profile</DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link to="/dashboard/settings/profile">Profile</Link>
+            </DropdownMenuItem>
 
             <DropdownMenuItem onClick={useLogout().handleLogout}>
               Logout
