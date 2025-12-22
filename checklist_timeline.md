@@ -242,11 +242,11 @@ npx shadcn@latest init
 
 #### Day 5-6: Active Sessions Management
 
-- [ ] Bikin `SessionsPage.jsx`
-- [ ] Fetch active sessions dari API
-- [ ] Display device info (useragent, location)
-- [ ] Revoke session functionality
-- [ ] Show current session indicator
+- [x] Bikin `SessionsPage.jsx`
+- [x] Fetch active sessions dari API
+- [x] Display device info (useragent, location)
+- [x] Revoke session functionality
+- [x] Show current session indicator
 
 **Deliverable Week 6:** Notifications working with polling, Sessions management done
 
