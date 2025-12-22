@@ -39,3 +39,21 @@ export async function updatePassword(payload) {
     return Promise.reject(error.response.data);
   }
 }
+
+export async function fetchSessions() {
+  try {
+    const { data } = await baseApi.get("/sessions");
+    return data;
+  } catch (error) {
+    return Promise.reject(error.response.data);
+  }
+}
+
+export async function revokeSession(id) {
+  try {
+    const { data } = await baseApi.post(`/sessions/revoke/${id}`);
+    return data;
+  } catch (error) {
+    return Promise.reject(error.response.data);
+  }
+}
