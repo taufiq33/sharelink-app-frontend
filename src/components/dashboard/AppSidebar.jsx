@@ -88,7 +88,11 @@ function SidebarMenuItemSettings() {
             <SidebarMenuSub>
               {settingsSubMenu.map((item) => (
                 <SidebarMenuSubItem key={item.label}>
-                  <SidebarMenuButton asChild size="lg">
+                  <SidebarMenuButton
+                    isActive={item.to === location.pathname}
+                    asChild
+                    size="lg"
+                  >
                     <NavLink to={item.to}>
                       {item.icon}
                       <span className={"ml-1"}>{item.label}</span>
@@ -130,7 +134,7 @@ export function AppSidebar() {
                 <SidebarMenuItem key={menu.label}>
                   <SidebarMenuButton
                     asChild
-                    isActive={menu.label === "Dashboard"}
+                    isActive={menu.to === location.pathname}
                     size="lg"
                   >
                     <NavLink to={menu.to}>
