@@ -16,7 +16,7 @@ export default function DashboardLayout() {
           </div>
         </main>
       </SidebarProvider>
-      <Toaster />
+      <Toaster richColors position="top-center" />
     </div>
   );
 }
