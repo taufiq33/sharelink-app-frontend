@@ -30,8 +30,11 @@ export default function useLoginForm() {
           accessToken: data.accessToken,
         })
       );
-
-      navigate("/dashboard");
+      if (data.user.role === "admin") {
+        navigate("/admin");
+      } else {
+        navigate("/dashboard");
+      }
     } catch (error) {
       form.setError("root", { type: "manual", message: error.data.message });
     }
