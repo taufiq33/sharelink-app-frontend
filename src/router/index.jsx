@@ -13,8 +13,10 @@ import { authRouter } from "@/features/auth/routes";
 import { userSettingsRoute } from "@/features/user/routes";
 import linksDashboardRoute from "@/features/links/routes";
 import notificationsRoute from "@/features/notification/routes";
+import { adminRoute } from "@/features/admin/routes";
 import ProtectedRoute from "./ProtectedRoute";
 import LinksByUsername from "@/pages/public/LinksByUsername";
+import AdminLayout from "@/components/layout/AdminLayout";
 
 const router = createBrowserRouter([
   {
@@ -66,6 +68,18 @@ const router = createBrowserRouter([
       },
     ],
   },
+  {
+    path: "/admin",
+    element: <ProtectedRoute admin={true} />,
+
+    children: [
+      {
+        element: <AdminLayout />,
+        children: adminRoute,
+      },
+    ],
+  },
+
   //TODO add error page
   { path: "*", element: <p>Page not found.</p> },
   // {

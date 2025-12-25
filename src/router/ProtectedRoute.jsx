@@ -5,8 +5,10 @@ import { requestNewAccessToken } from "@/features/auth/api";
 
 import { useDispatch } from "react-redux";
 import { saveAndDecodeAccessToken } from "@/features/auth/authCustomActions";
+import { useSelector } from "react-redux";
 
-export default function ProtectedRoute() {
+export default function ProtectedRoute({ admin = false }) {
+  const userIsAdmin = useSelector((state) => state.auth.role) === "admin";
   const navigate = useNavigate();
   const dispatch = useDispatch();
   useEffect(() => {
@@ -25,5 +27,6 @@ export default function ProtectedRoute() {
     }
   }, [navigate, dispatch]);
 
+  if (admin && !userIsAdmin) navigate("/dashboard");
   return <Outlet />;
 }
