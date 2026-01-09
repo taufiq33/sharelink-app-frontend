@@ -256,11 +256,11 @@ npx shadcn@latest init
 
 #### Day 1-2: Admin Layout & Navigation
 
-- [ ] Bikin `AdminLayout.jsx`
-- [ ] Admin sidebar dengan menu
-- [ ] Admin dashboard home
+- [x] Bikin `AdminLayout.jsx`
+- [x] Admin sidebar dengan menu
+- [x] Admin dashboard home
 - [ ] Stats cards (total users, links, reports)
-- [ ] Install chart library (optional):
+- [x] Install chart library (optional):
   ```bash
   npm install recharts
   ```

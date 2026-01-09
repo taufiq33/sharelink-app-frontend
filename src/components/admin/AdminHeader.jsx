@@ -36,7 +36,6 @@ export default function AdminHeader() {
           <Menu className="sm:hidden" />{" "}
           <PanelLeft className="hidden sm:block" />
         </Button>
-        <h2 className="font-bold sm:text-xl">Admin Dashboard</h2>
       </div>
       <div className="push-right flex gap-2 items-center justify-center md:gap-4">
         <div className="flex justify-center items-center">
