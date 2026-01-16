@@ -1,9 +1,13 @@
 import { Button } from "@/components/ui/button";
-import { Spinner } from "@/components/ui/spinner";
+import { getAppStats } from "@/features/admin/api";
+
 import AdminDashboardChart from "@/features/admin/components/AdminDashboardChart";
+import RecentReportTableCard from "@/features/admin/components/RecentReportTableCard";
 import { Flag } from "lucide-react";
 import { Link2 } from "lucide-react";
 import { Users } from "lucide-react";
+import { useEffect, useState } from "react";
+
 import { useSelector } from "react-redux";
 
 function StatsCardItem({ label, value, icon, className }) {
@@ -22,6 +26,20 @@ function StatsCardItem({ label, value, icon, className }) {
 
 export default function AdminDashboard() {
   const { username } = useSelector((state) => state.auth);
+
+  const [stats, setStats] = useState({
+    users: 0,
+    links: 0,
+    reports: 0,
+  });
+  useEffect(() => {
+    async function fetchAppStats() {
+      const { data } = await getAppStats();
+      setStats(data.stats);
+    }
+
+    fetchAppStats();
+  }, []);
   return (
     <div className="flex flex-col gap-4 p-2">
       <div>
@@ -34,28 +52,26 @@ export default function AdminDashboard() {
         <StatsCardItem
           className="bg-accent"
           label="Total Users"
-          value={248}
+          value={stats.users}
           icon={<Users />}
         />
         <StatsCardItem
           className={"bg-green-800"}
           label="Total Links"
-          value={1248}
+          value={stats.links}
           icon={<Link2 />}
         />
         <StatsCardItem
           className={"bg-destructive"}
           label="Total Reports"
-          value={122}
+          value={stats.reports}
           icon={<Flag />}
         />
       </div>
 
-      <div className="banner flex gap-2">
+      <div className="banner flex gap-4 flex-col lg:flex-row">
         <AdminDashboardChart />
-        <div className="recent-report">
-          <h3>Recent Reports</h3>
-        </div>
+        <RecentReportTableCard />
       </div>
     </div>
   );

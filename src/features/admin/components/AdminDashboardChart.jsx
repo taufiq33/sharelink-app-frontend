@@ -6,17 +6,10 @@ import {
   ChartLegend,
   ChartLegendContent,
 } from "@/components/ui/chart";
+import { useEffect, useState } from "react";
 
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
-
-const dummy = [
-  { date: "2026-1-4", users: 5, links: 12, reports: 1 },
-  { date: "2026-1-5", users: 8, links: 20, reports: 0 },
-  { date: "2026-1-6", users: 2, links: 9, reports: 3 },
-  { date: "2026-1-7", users: 2, links: 1, reports: 0 },
-  { date: "2026-1-8", users: 1, links: 19, reports: 1 },
-  { date: "2026-1-9", users: 4, links: 22, reports: 1 },
-];
+import { get5LastAppStats } from "../api";
 
 const chartConfig = {
   users: {
@@ -34,6 +27,15 @@ const chartConfig = {
 };
 
 export default function AdminDashboardChart() {
+  const [appData, setAppData] = useState([]);
+  useEffect(() => {
+    async function loadData() {
+      const { data } = await get5LastAppStats();
+      setAppData(data.stats);
+    }
+
+    loadData();
+  }, [setAppData]);
   return (
     <Card className={"max-w-[600px]"}>
       <CardHeader>
@@ -41,7 +43,7 @@ export default function AdminDashboardChart() {
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig} className={"min-h-[300px] w-full"}>
-          <BarChart accessibilityLayer data={dummy}>
+          <BarChart accessibilityLayer data={appData}>
             <CartesianGrid />
             <XAxis dataKey={"date"} tickMargin={10} />
             <YAxis />
