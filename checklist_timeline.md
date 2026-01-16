@@ -259,7 +259,7 @@ npx shadcn@latest init
 - [x] Bikin `AdminLayout.jsx`
 - [x] Admin sidebar dengan menu
 - [x] Admin dashboard home
-- [ ] Stats cards (total users, links, reports)
+- [x] Stats cards (total users, links, reports)
 - [x] Install chart library (optional):
   ```bash
   npm install recharts
