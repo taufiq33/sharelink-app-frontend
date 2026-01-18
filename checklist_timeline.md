@@ -267,12 +267,12 @@ npx shadcn@latest init
 
 #### Day 3-4: User Management
 
-- [ ] Bikin `AdminUsersPage.jsx`
-- [ ] Fetch all users
-- [ ] Users table dengan filter
-- [ ] Block/unblock user action
-- [ ] View user details dialog
-- [ ] Install:
+- [x] Bikin `AdminUsersPage.jsx`
+- [x] Fetch all users
+- [x] Users table dengan filter
+- [x] Block/unblock user action
+- [x] View user details dialog
+- [x] Install:
   ```bash
   npx shadcn@latest add tabs
   npx shadcn@latest add select

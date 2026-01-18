@@ -75,8 +75,6 @@ export default function UsersPage() {
   const role = form.watch("role");
   const status = form.watch("status");
 
-  console.log(`role ${role} , status ${status}`);
-
   let displayUsers = useMemo(() => {
     return users.filter((user) => {
       const keywordMatch =
@@ -129,6 +127,7 @@ export default function UsersPage() {
             <div className="flex gap-4">
               <InputGroup>
                 <InputGroupInput
+                  type="search"
                   placeholder="Search by username / email here...."
                   {...form.register("keyword")}
                 />
@@ -231,7 +230,7 @@ export default function UsersPage() {
                     </TableCell>
 
                     <TableCell className={"flex gap-4"}>
-                      <UserDetailDialog id={item.id} />
+                      <UserDetailDialog userData={item} />
                       {item.username !== currentUser && (
                         <AlertDialog>
                           <AlertDialogTrigger asChild>
