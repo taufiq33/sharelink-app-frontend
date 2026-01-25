@@ -45,3 +45,12 @@ export async function getUserDetail(id) {
     return Promise.reject(error.response.data);
   }
 }
+
+export async function getAllLinks() {
+  try {
+    const request = await baseApi.get("/admin/links");
+    return request.data;
+  } catch (error) {
+    return Promise.reject(error.response.data);
+  }
+}
