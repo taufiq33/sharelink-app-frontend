@@ -1,6 +1,12 @@
 import { Link } from "lucide-react";
 import { Button } from "../ui/button";
 import { trackLink } from "@/features/links/api";
+import { Flag } from "lucide-react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 export default function PublicSingleLink({ linkData }) {
   async function handleClick() {
@@ -26,9 +32,27 @@ export default function PublicSingleLink({ linkData }) {
           <span className="text-xs text-foreground/60">{linkData.link}</span>
         </div>
       </div>
-      <Button onClick={handleClick} size={"sm"}>
-        Visit
-      </Button>
+      <div className="flex justify-center items-center gap-2">
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              className={
+                "hover:bg-secondary hover:rounded-full hover:text-destructive "
+              }
+              variant={"icon"}
+            >
+              <Flag />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Report this link.</p>
+          </TooltipContent>
+        </Tooltip>
+
+        <Button onClick={handleClick} size={"sm"}>
+          Visit
+        </Button>
+      </div>
     </div>
   );
 }

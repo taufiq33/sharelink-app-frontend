@@ -280,11 +280,11 @@ npx shadcn@latest init
 
 #### Day 5-6: Link Management (Admin)
 
-- [ ] Bikin `AdminLinksPage.jsx`
-- [ ] Fetch all links (all users)
-- [ ] Filter by user/status
-- [ ] Delete link functionality
-- [ ] View link details
+- [x] Bikin `AdminLinksPage.jsx`
+- [x] Fetch all links (all users)
+- [x] Filter by user/status
+- [x] Delete link functionality
+- [] View link details
 
 **Deliverable Week 7:** Admin panel structure ready, User & Link management done
 
@@ -294,9 +294,9 @@ npx shadcn@latest init
 
 #### Day 1-2: Report Form (Public)
 
-- [ ] Bikin `ReportPage.jsx`
-- [ ] Form report user/link
-- [ ] Zod schema validation
+- [x] Bikin `ReportPage.jsx`
+- [x] Form report user/link
+- [x] Zod schema validation
 - [ ] Submit report (guest allowed)
 - [ ] Success feedback
 

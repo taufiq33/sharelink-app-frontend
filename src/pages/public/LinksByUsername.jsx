@@ -10,6 +10,8 @@ import { Link } from "react-router-dom";
 import ToggleThemeButton from "@/components/public/ToggleThemeButton";
 import { Megaphone } from "lucide-react";
 import { getUserProfilePictureUrl } from "@/lib/utils";
+import { Flag } from "lucide-react";
+import Promotional from "@/components/public/Promotional";
 
 export default function LinksByUsername() {
   const { username } = useParams();
@@ -79,24 +81,15 @@ export default function LinksByUsername() {
                 <PublicSingleLink linkData={link} key={link.id} />
               ))}
           </div>
-          <div className="promotional my-15  bg-white dark:bg-secondary/50 rounded-lg shadow-lg">
-            <div className="flex flex-col gap-4 px-4 py-10 sm:p-20 items-center">
-              <Megaphone className="w-15 rounded-full h-15 text-primary bg-accent/10 p-4 shadow" />
-              <h2 className=" font-bold text-center">
-                Create your own Links Profile Page
-              </h2>
-              <p className="text-sm text-foreground/70 text-center leading-6 tracking-wide">
-                Share your links, portofolio, and social profiles in one
-                beautiful place. Join now and start building your personal
-                landing page in minutes.
-              </p>
-              <Link to="/auth/register">
-                <Button className="w-fit">
-                  Get Started for Free <ArrowRight />
-                </Button>
-              </Link>
-            </div>
+
+          <div className="flex justify-center items-center mt-5">
+            <Link to={`/report/${user.username}`}>
+              <Button className={"bg-destructive hover:bg-destructive/80"}>
+                <Flag /> Report User
+              </Button>
+            </Link>
           </div>
+          <Promotional />
         </>
       )}
     </main>

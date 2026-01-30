@@ -17,6 +17,7 @@ import { adminRoute } from "@/features/admin/routes";
 import ProtectedRoute from "./ProtectedRoute";
 import LinksByUsername from "@/pages/public/LinksByUsername";
 import AdminLayout from "@/components/layout/AdminLayout";
+import ReportLinkOrUser from "@/pages/public/ReportLinkOrUser";
 
 const router = createBrowserRouter([
   {
@@ -33,6 +34,11 @@ const router = createBrowserRouter([
   {
     path: "/u/:username",
     element: <LinksByUsername />,
+  },
+
+  {
+    path: "/report/:username",
+    element: <ReportLinkOrUser />,
   },
 
   {
