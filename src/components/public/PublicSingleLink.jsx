@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import { Link } from "lucide-react";
 import { Button } from "../ui/button";
 import { trackLink } from "@/features/links/api";
@@ -8,7 +9,9 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
-export default function PublicSingleLink({ linkData }) {
+export default function PublicSingleLink({ linkData, reportLinkTarget }) {
+  const navigate = useNavigate();
+
   async function handleClick() {
     try {
       await trackLink(linkData.id);
@@ -34,7 +37,13 @@ export default function PublicSingleLink({ linkData }) {
       </div>
       <div className="flex justify-center items-center gap-2">
         <Tooltip>
-          <TooltipTrigger asChild>
+          <TooltipTrigger
+            onClick={(e) => {
+              e.stopPropagation();
+              navigate(reportLinkTarget);
+            }}
+            asChild
+          >
             <Button
               className={
                 "hover:bg-secondary hover:rounded-full hover:text-destructive "

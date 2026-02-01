@@ -78,7 +78,11 @@ export default function LinksByUsername() {
             )}
             {user.links.length !== 0 &&
               user.links.map((link) => (
-                <PublicSingleLink linkData={link} key={link.id} />
+                <PublicSingleLink
+                  reportLinkTarget={`/report/${username}?linkId=${link.id}`}
+                  linkData={link}
+                  key={link.id}
+                />
               ))}
           </div>
 

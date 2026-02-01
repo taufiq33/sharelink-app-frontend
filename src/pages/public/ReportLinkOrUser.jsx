@@ -1,6 +1,6 @@
 import Promotional from "@/components/public/Promotional";
 import { CircleAlert } from "lucide-react";
-import { useParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -28,9 +28,29 @@ import { Textarea } from "@/components/ui/textarea";
 import { Field, FieldError, FieldLabel, FieldSet } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { User } from "lucide-react";
+import { useEffect, useState } from "react";
+import { getPublicLinkDetail } from "@/features/links/api";
 
 export default function ReportLinkOrUser() {
   const { username } = useParams();
+  const [searchParams] = useSearchParams();
+  const [linkDetail, setLinkDetail] = useState(null);
+
+  useEffect(() => {
+    async function getLinkDetail(id) {
+      try {
+        const { data } = await getPublicLinkDetail(id);
+        setLinkDetail(data.link);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    if (searchParams.get("linkId")) {
+      getLinkDetail(searchParams.get("linkId"));
+    }
+  }, [searchParams]);
+
   const reportForm = useForm({
     defaultValues: {
       type: "user",
@@ -70,12 +90,25 @@ export default function ReportLinkOrUser() {
               <Field>
                 <FieldLabel>Reporting Subject / Link</FieldLabel>
 
-                <InputGroup className={"bg-secondary"}>
-                  <InputGroupInput value={`User: ${username}`} />
-                  <InputGroupAddon>
-                    <User />
-                  </InputGroupAddon>
-                </InputGroup>
+                {linkDetail ? (
+                  <InputGroup className={"bg-secondary"}>
+                    <InputGroupInput
+                      disabled
+                      value={`${username}'s Link: ${linkDetail.label} (${linkDetail.url})`}
+                    />
+                    <InputGroupAddon>
+                      <User />
+                    </InputGroupAddon>
+                  </InputGroup>
+                ) : (
+                  <InputGroup className={"bg-secondary"}>
+                    <InputGroupInput disabled value={`User: ${username}`} />
+                    <InputGroupAddon>
+                      <User />
+                    </InputGroupAddon>
+                  </InputGroup>
+                )}
+
                 <Input hidden {...reportForm.register("userTarget")} />
               </Field>
               <Field>
