@@ -297,8 +297,8 @@ npx shadcn@latest init
 - [x] Bikin `ReportPage.jsx`
 - [x] Form report user/link
 - [x] Zod schema validation
-- [ ] Submit report (guest allowed)
-- [ ] Success feedback
+- [x] Submit report (guest allowed)
+- [x] Success feedback
 
 #### Day 3-4: Admin Reports List
 

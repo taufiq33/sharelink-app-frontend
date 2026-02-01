@@ -85,6 +85,15 @@ export async function getPublicLinkDetail(linkId) {
   }
 }
 
+export async function reportLink(reportData) {
+  try {
+    const request = await baseApi.post("/public/report", reportData);
+    return request.data;
+  } catch (error) {
+    return Promise.reject(error.response.data);
+  }
+}
+
 export async function saveOrder(arrayOfLinksId) {
   try {
     const request = await baseApi.put("/links/reorder", arrayOfLinksId);

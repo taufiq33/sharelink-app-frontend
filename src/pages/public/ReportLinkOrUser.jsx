@@ -1,6 +1,6 @@
 import Promotional from "@/components/public/Promotional";
 import { CircleAlert } from "lucide-react";
-import { useParams, useSearchParams } from "react-router-dom";
+import { useParams, useSearchParams, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -21,7 +21,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { reportingSchema } from "@/schemas/reportingSchema";
 import { Textarea } from "@/components/ui/textarea";
@@ -29,12 +29,13 @@ import { Field, FieldError, FieldLabel, FieldSet } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { User } from "lucide-react";
 import { useEffect, useState } from "react";
-import { getPublicLinkDetail } from "@/features/links/api";
+import { getPublicLinkDetail, reportLink } from "@/features/links/api";
 
 export default function ReportLinkOrUser() {
   const { username } = useParams();
   const [searchParams] = useSearchParams();
   const [linkDetail, setLinkDetail] = useState(null);
+  const [successMessage, setSuccessMessage] = useState(null);
 
   useEffect(() => {
     async function getLinkDetail(id) {
@@ -53,17 +54,31 @@ export default function ReportLinkOrUser() {
 
   const reportForm = useForm({
     defaultValues: {
-      type: "user",
-      userReporter: "",
-      userTarget: username,
-      linkTarget: "",
+      message: "",
       reason: "",
     },
     resolver: zodResolver(reportingSchema),
   });
 
-  function handleSubmit(data) {
-    console.log(data);
+  async function onHandleSubmit(formData) {
+    const submittedData = {
+      type: linkDetail ? "link" : "user",
+
+      userTarget: searchParams.get("userId"),
+
+      reason: `${formData.reason}, ${formData.message} `,
+    };
+
+    if (searchParams.get("linkId")) {
+      submittedData.linkTarget = searchParams.get("linkId");
+    }
+
+    try {
+      const { data } = await reportLink(submittedData);
+      setSuccessMessage(data.message);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   return (
@@ -81,95 +96,108 @@ export default function ReportLinkOrUser() {
         <CardHeader>
           <CardTitle>Report User/Link </CardTitle>
           <CardDescription>
-            Please complete this form before submit report.
+            {successMessage
+              ? "Thanks for your report. We will review this report and take action as soon as possible."
+              : "Please complete this form before submit report."}
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={reportForm.handleSubmit(handleSubmit)}>
-            <FieldSet>
-              <Field>
-                <FieldLabel>Reporting Subject / Link</FieldLabel>
+          {successMessage && (
+            <Link className="text-center text-sm underline text-accent" to="/">
+              Back to homepage.
+            </Link>
+          )}
+          {!successMessage && (
+            <form onSubmit={reportForm.handleSubmit(onHandleSubmit)}>
+              <FieldSet>
+                <Field>
+                  <FieldLabel>Reporting Subject / Link</FieldLabel>
 
-                {linkDetail ? (
-                  <InputGroup className={"bg-secondary"}>
-                    <InputGroupInput
-                      disabled
-                      value={`${username}'s Link: ${linkDetail.label} (${linkDetail.url})`}
-                    />
-                    <InputGroupAddon>
-                      <User />
-                    </InputGroupAddon>
-                  </InputGroup>
-                ) : (
-                  <InputGroup className={"bg-secondary"}>
-                    <InputGroupInput disabled value={`User: ${username}`} />
-                    <InputGroupAddon>
-                      <User />
-                    </InputGroupAddon>
-                  </InputGroup>
-                )}
+                  {linkDetail ? (
+                    <>
+                      <InputGroup className={"bg-secondary"}>
+                        <InputGroupInput
+                          disabled
+                          value={`${username}'s Link: ${linkDetail.label} (${linkDetail.url})`}
+                        />
+                        <InputGroupAddon>
+                          <User />
+                        </InputGroupAddon>
+                      </InputGroup>
+                    </>
+                  ) : (
+                    <InputGroup className={"bg-secondary"}>
+                      <InputGroupInput disabled value={`User: ${username}`} />
+                      <InputGroupAddon>
+                        <User />
+                      </InputGroupAddon>
+                    </InputGroup>
+                  )}
+                </Field>
+                <Field>
+                  <FieldLabel>Reason for report</FieldLabel>
+                  <Controller
+                    control={reportForm.control}
+                    name="reason"
+                    render={({ field }) => {
+                      return (
+                        <Select
+                          value={field.value}
+                          onValueChange={field.onChange}
+                        >
+                          <SelectTrigger className="w-[180px]">
+                            <SelectValue placeholder="Select a reason" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="Broken link">
+                              Broken Link
+                            </SelectItem>
+                            <SelectItem value="Spam or misleading">
+                              Spam or misleading
+                            </SelectItem>
+                            <SelectItem value="Inappropriate content">
+                              Inappropriate content
+                            </SelectItem>
+                            <SelectItem value="Harassment or bullying">
+                              Harassment or bullying
+                            </SelectItem>
+                            <SelectItem value="Hate speech">
+                              Hate speech
+                            </SelectItem>
+                            <SelectItem value="Other">Other</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      );
+                    }}
+                  />
+                  {reportForm.formState.errors?.reason && (
+                    <FieldError>
+                      {reportForm.formState.errors?.reason.message}
+                    </FieldError>
+                  )}
+                </Field>
 
-                <Input hidden {...reportForm.register("userTarget")} />
-              </Field>
-              <Field>
-                <FieldLabel>Reason for report</FieldLabel>
-                <Select>
-                  <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder="Select a reason" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="Broken link">Broken Link</SelectItem>
-                    <SelectItem value="Spam or misleading">
-                      Spam or misleading
-                    </SelectItem>
-                    <SelectItem value="Inappropriate content">
-                      Inappropriate content
-                    </SelectItem>
-                    <SelectItem value="Harassment or bullying">
-                      Harassment or bullying
-                    </SelectItem>
-                    <SelectItem value="Hate speech">Hate speech</SelectItem>
-                    <SelectItem value="Other">Other</SelectItem>
-                  </SelectContent>
-                </Select>
-                {reportForm.formState.errors?.type && (
-                  <FieldError>
-                    {reportForm.formState.errors?.type.message}
-                  </FieldError>
-                )}
-              </Field>
+                <Field>
+                  <FieldLabel>Additional details (optional)</FieldLabel>
+                  <Textarea
+                    {...reportForm.register("message")}
+                    placeholder="Please provide more information about the violation"
+                  />
+                  {reportForm.formState.errors?.message && (
+                    <FieldError>
+                      {reportForm.formState.errors?.message.message}
+                    </FieldError>
+                  )}
+                </Field>
 
-              <Field>
-                <FieldLabel>Additional details</FieldLabel>
-                <Textarea
-                  {...reportForm.register("reason")}
-                  placeholder="Please provide more information about the violation"
-                />
-                {reportForm.formState.errors?.reason && (
-                  <FieldError>
-                    {reportForm.formState.errors?.reason.message}
-                  </FieldError>
-                )}
-              </Field>
-              <Field>
-                <FieldLabel>Your Email</FieldLabel>
-                <Input
-                  placeholder="email@example.com"
-                  {...reportForm.register("userReporter")}
-                />
-                {reportForm.formState.errors?.userReporter && (
-                  <FieldError>
-                    {reportForm.formState.errors?.userReporter.message}
-                  </FieldError>
-                )}
-              </Field>
-              <Field className={"flex items-end justify-end"}>
-                <Button className={"max-w-fit"} type="submit">
-                  Submit Report
-                </Button>
-              </Field>
-            </FieldSet>
-          </form>
+                <Field className={"flex items-end justify-end"}>
+                  <Button className={"max-w-fit"} type="submit">
+                    Submit Report
+                  </Button>
+                </Field>
+              </FieldSet>
+            </form>
+          )}
         </CardContent>
       </Card>
       <Promotional />

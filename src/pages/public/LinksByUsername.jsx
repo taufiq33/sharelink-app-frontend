@@ -18,6 +18,7 @@ export default function LinksByUsername() {
   const [user, setUsers] = useState({
     username: null,
     shortBio: null,
+    id: null,
     links: [],
   });
 
@@ -28,6 +29,7 @@ export default function LinksByUsername() {
         setUsers(() => ({
           username: data.username,
           shortBio: data.shortBio,
+          id: data.id,
           links: data.links,
         }));
       } catch (error) {
@@ -79,7 +81,7 @@ export default function LinksByUsername() {
             {user.links.length !== 0 &&
               user.links.map((link) => (
                 <PublicSingleLink
-                  reportLinkTarget={`/report/${username}?linkId=${link.id}`}
+                  reportLinkTarget={`/report/${username}?userId=${user.id}&linkId=${link.id}`}
                   linkData={link}
                   key={link.id}
                 />
@@ -87,7 +89,7 @@ export default function LinksByUsername() {
           </div>
 
           <div className="flex justify-center items-center mt-5">
-            <Link to={`/report/${user.username}`}>
+            <Link to={`/report/${user.username}?userId=${user.id}`}>
               <Button className={"bg-destructive hover:bg-destructive/80"}>
                 <Flag /> Report User
               </Button>
