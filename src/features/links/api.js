@@ -87,7 +87,9 @@ export async function getPublicLinkDetail(linkId) {
 
 export async function reportLink(reportData) {
   try {
-    const request = await baseApi.post("/public/report", reportData);
+    const request = await baseApi.post("/public/report", reportData, {
+      skipAuthRedirect: true,
+    });
     return request.data;
   } catch (error) {
     return Promise.reject(error.response.data);

@@ -25,7 +25,11 @@ function requestInterceptor(config) {
 async function errorResponseInterceptor(error) {
   const originalConfig = error.config;
 
-  if (error?.response?.status === 401 && !originalConfig._retry) {
+  if (
+    error?.response?.status === 401 &&
+    !originalConfig._retry &&
+    !originalConfig.skipAuthRedirect
+  ) {
     originalConfig._retry = true;
 
     try {
@@ -35,7 +39,6 @@ async function errorResponseInterceptor(error) {
 
       return baseApi(originalConfig);
     } catch (refreshError) {
-      console.log("sampe sini");
       window.location.href = "/auth/login";
       return Promise.reject(refreshError);
     }
@@ -50,7 +53,7 @@ function successResponseInterceptor(response) {
 baseApi.interceptors.request.use(requestInterceptor);
 baseApi.interceptors.response.use(
   successResponseInterceptor,
-  errorResponseInterceptor
+  errorResponseInterceptor,
 );
 
 export { baseApi };
