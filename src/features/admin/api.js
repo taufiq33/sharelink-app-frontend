@@ -54,3 +54,12 @@ export async function getAllLinks() {
     return Promise.reject(error.response.data);
   }
 }
+
+export async function getAllReports() {
+  try {
+    const request = await baseApi.get("/admin/reports");
+    return request.data;
+  } catch (error) {
+    return Promise.reject(error.response.data);
+  }
+}
