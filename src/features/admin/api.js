@@ -63,3 +63,12 @@ export async function getAllReports() {
     return Promise.reject(error.response.data);
   }
 }
+
+export async function getReportDetail(id) {
+  try {
+    const request = await baseApi.get(`/admin/reports/${id}`);
+    return request.data;
+  } catch (error) {
+    return Promise.reject(error.response.data);
+  }
+}

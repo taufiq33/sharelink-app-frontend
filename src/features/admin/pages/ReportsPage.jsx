@@ -5,18 +5,6 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
 
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-
-import {
   Select,
   SelectContent,
   SelectGroup,
@@ -34,8 +22,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { BadgeCheckIcon } from "lucide-react";
-import { UserLock } from "lucide-react";
 
 import {
   InputGroup,
@@ -45,14 +31,43 @@ import {
 import { Search } from "lucide-react";
 import { useForm, Controller } from "react-hook-form";
 import { useMemo } from "react";
-import { ArrowDownNarrowWide } from "lucide-react";
-import { UserCheck } from "lucide-react";
-import { toast } from "sonner";
-import { useSelector } from "react-redux";
-import UserDetailDialog from "../components/UserDetailDialog";
+
+import { Link } from "react-router-dom";
+
+import { formatDateTime, getUserProfilePictureUrl } from "@/lib/utils";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+
+export function CustomBadge({ text }) {
+  let variant = "secondary";
+  if (text === "rejected") variant = "destructive";
+  if (text === "done") variant = "default";
+  return <Badge variant={variant}>{text}</Badge>;
+}
+
+export function ReasonText({ children }) {
+  const [truncate, setTruncate] = useState(true);
+  function handleClick() {
+    setTruncate((prev) => !prev);
+  }
+
+  const longText = children.length > 40 ? true : false;
+  return (
+    <div className="max-w-[150px]">
+      <p
+        className={`italic text-sm  ${longText && truncate ? "truncate" : "text-wrap"}`}
+      >
+        {children}
+      </p>{" "}
+      {longText && (
+        <Button onClick={handleClick} variant={"link"}>
+          {truncate ? "more.." : "less.."}
+        </Button>
+      )}
+    </div>
+  );
+}
 
 export default function ReportsPage() {
-  const currentUser = useSelector((state) => state.auth.username);
   const [reports, setReports] = useState([]);
   const form = useForm({
     defaultValues: {
@@ -76,14 +91,13 @@ export default function ReportsPage() {
 
   let displayReports = useMemo(() => {
     return reports.filter((item) => {
-      const reporter = item.reporte;
+      const reporter = item?.reporter?.username || "guest";
       const keywordMatch =
         !keyword ||
         item?.link?.link?.toLowerCase().includes(keyword.toLowerCase()) ||
         item?.link?.label?.toLowerCase().includes(keyword.toLowerCase()) ||
-        item.reporter?.username
-          ?.toLowerCase()
-          .includes(keyword.toLowerCase()) ||
+        item?.target?.username?.toLowerCase().includes(keyword.toLowerCase()) ||
+        reporter.toLowerCase().includes(keyword.toLowerCase()) ||
         item.reason.toLowerCase().includes(keyword.toLowerCase());
 
       const statusMatch = status === "allstatus" || item.markReview === status;
@@ -115,7 +129,7 @@ export default function ReportsPage() {
         </div>
       </div>
 
-      <div className="mt-4 max-w-9/10">
+      <div className="mt-4 max-w-11/12">
         <Card>
           <CardHeader>
             <CardTitle>ShareLink App Users's Reports.</CardTitle>
@@ -172,10 +186,22 @@ export default function ReportsPage() {
               <TableBody>
                 {displayReports.map((item) => (
                   <TableRow key={item.id}>
-                    <TableCell>{item.markReview}</TableCell>
+                    <TableCell>
+                      <CustomBadge text={item.markReview} />
+                    </TableCell>
                     {item.type === "user" && (
-                      <TableCell>
-                        {item.type}: {item.target.username}
+                      <TableCell
+                        className={"flex justify-start items-center gap-2"}
+                      >
+                        <Avatar>
+                          <AvatarImage
+                            src={getUserProfilePictureUrl(item.target.username)}
+                          />
+                          <AvatarFallback>USERPHOTO</AvatarFallback>
+                        </Avatar>
+                        <span className="font-bold">
+                          {item.target.username} (USER)
+                        </span>
                       </TableCell>
                     )}
                     {item.type === "link" && (
@@ -195,46 +221,23 @@ export default function ReportsPage() {
                       </TableCell>
                     )}
                     <TableCell>
-                      {item.reporter ? item.reporter.username : "guest"}
+                      <Badge variant={item.reporter ? "outline" : "secondary"}>
+                        {item.reporter ? item.reporter.username : "guest"}
+                      </Badge>
                     </TableCell>
-                    <TableCell>{item.reason}</TableCell>
-                    <TableCell>{item.createdAt}</TableCell>
+                    <TableCell>
+                      <ReasonText>{item.reason}</ReasonText>
+                    </TableCell>
+                    <TableCell className={"text-xs"}>
+                      {formatDateTime(item.createdAt)}
+                    </TableCell>
 
                     <TableCell className={"flex gap-4"}>
-                      <UserDetailDialog userData={item} />
-                      {item.username !== currentUser && (
-                        <AlertDialog>
-                          <AlertDialogTrigger asChild>
-                            <Button variant={item.active ? "destructive" : ""}>
-                              {item.active ? <UserLock /> : <UserCheck />}
-                            </Button>
-                          </AlertDialogTrigger>
-                          <AlertDialogContent>
-                            <AlertDialogHeader>
-                              <AlertDialogTitle>
-                                Are you absolutely sure?
-                              </AlertDialogTitle>
-                              <AlertDialogDescription>
-                                This will make user <b>"{item.username}"</b> (
-                                {item.email}){" "}
-                                {item.active ? "blocked" : "active"}
-                              </AlertDialogDescription>
-                            </AlertDialogHeader>
-                            <AlertDialogFooter>
-                              <AlertDialogCancel>Cancel</AlertDialogCancel>
-                              <AlertDialogAction
-                                className={
-                                  item.active
-                                    ? "bg-destructive hover:bg-destructive/80"
-                                    : ""
-                                }
-                              >
-                                {item.active ? "Block user" : "Activate user"}
-                              </AlertDialogAction>
-                            </AlertDialogFooter>
-                          </AlertDialogContent>
-                        </AlertDialog>
-                      )}
+                      <Link to={`/admin/reports/${item.id}`}>
+                        <Button size="sm" variant={"outline"}>
+                          Review Report
+                        </Button>
+                      </Link>
                     </TableCell>
                   </TableRow>
                 ))}

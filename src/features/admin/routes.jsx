@@ -3,6 +3,7 @@ import UsersPage from "./pages/UsersPage";
 import LinksPage from "./pages/LinksPage";
 import ReportsPage from "./pages/ReportsPage";
 import SettingsPage from "./pages/SettingsPage";
+import ReportDetailPage from "./pages/ReportDetailPage";
 
 export const adminRoute = [
   {
@@ -20,6 +21,10 @@ export const adminRoute = [
   {
     path: "reports",
     element: <ReportsPage />,
+  },
+  {
+    path: "reports/:id",
+    element: <ReportDetailPage />,
   },
   {
     path: "settings",

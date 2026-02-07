@@ -302,9 +302,9 @@ npx shadcn@latest init
 
 #### Day 3-4: Admin Reports List
 
-- [ ] Bikin `AdminReportsPage.jsx`
-- [ ] Fetch all reports
-- [ ] Filter by status (waiting/done/rejected)
+- [x] Bikin `AdminReportsPage.jsx`
+- [x] Fetch all reports
+- [x] Filter by status (waiting/done/rejected)
 - [ ] Display report details
 - [ ] Update status functionality
 
