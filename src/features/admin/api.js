@@ -72,3 +72,14 @@ export async function getReportDetail(id) {
     return Promise.reject(error.response.data);
   }
 }
+
+export async function flagReport(id, mark) {
+  try {
+    const request = await baseApi.patch(`/admin/reports/mark/${id}`, {
+      mark,
+    });
+    return request.data;
+  } catch (error) {
+    return Promise.reject(error.response.data);
+  }
+}

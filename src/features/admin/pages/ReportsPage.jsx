@@ -38,10 +38,15 @@ import { formatDateTime, getUserProfilePictureUrl } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export function CustomBadge({ text }) {
-  let variant = "secondary";
+  let variant = "default";
+  let cls = "";
   if (text === "rejected") variant = "destructive";
-  if (text === "done") variant = "default";
-  return <Badge variant={variant}>{text}</Badge>;
+  if (text === "waiting") cls = "text-yellow-700 bg-yellow-300";
+  return (
+    <Badge className={cls} variant={variant}>
+      {text}
+    </Badge>
+  );
 }
 
 export function ReasonText({ children }) {
@@ -221,7 +226,11 @@ export default function ReportsPage() {
                       </TableCell>
                     )}
                     <TableCell>
-                      <Badge variant={item.reporter ? "outline" : "secondary"}>
+                      <Badge
+                        variant={!item.reporter && "outline"}
+                        className={`${item.reporter && "bg-green-800 text-white"} font-bold`}
+                      >
+                        {" "}
                         {item.reporter ? item.reporter.username : "guest"}
                       </Badge>
                     </TableCell>
