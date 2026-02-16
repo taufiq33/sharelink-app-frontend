@@ -27,6 +27,7 @@ export default function SortableLinkItem({
   onHandleDeleteLink,
   onUpOrder,
   onDownOrder,
+  highlight,
 }) {
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({
@@ -37,13 +38,15 @@ export default function SortableLinkItem({
     transform: CSS.Transform.toString(transform),
     transition,
   };
+
+  console.log(highlight);
   return (
     <div
       key={item.id}
       ref={setNodeRef}
       style={style}
       {...attributes}
-      className="draggable-link-item bg-white dark:bg-background flex justify-between items-center p-2 rounded-lg shadow-xl "
+      className={`draggable-link-item bg-white dark:bg-background flex justify-between items-center p-2 rounded-lg shadow-xl ${highlight && "border-blue-600 border-2"}`}
     >
       <div className="link-section flex items-center justify-around md:gap-4 gap-3 md:p-1">
         <GripVertical {...listeners} className="cursor-grab " />

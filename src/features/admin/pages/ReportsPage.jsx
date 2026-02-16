@@ -5,6 +5,15 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
 
 import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
+import {
   Select,
   SelectContent,
   SelectGroup,
@@ -36,6 +45,36 @@ import { Link } from "react-router-dom";
 
 import { formatDateTime, getUserProfilePictureUrl } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+
+export function PaginationComponent() {
+  return (
+    <Pagination className={"mt-2 justify-end"}>
+      <PaginationContent>
+        <PaginationItem>
+          <PaginationPrevious href="#" />
+        </PaginationItem>
+
+        <PaginationItem>
+          <PaginationLink href="#">1</PaginationLink>
+        </PaginationItem>
+        <PaginationItem>
+          <PaginationLink href="#" isActive>
+            2
+          </PaginationLink>
+        </PaginationItem>
+        <PaginationItem>
+          <PaginationLink href="#">3</PaginationLink>
+        </PaginationItem>
+        <PaginationItem>
+          <PaginationEllipsis />
+        </PaginationItem>
+        <PaginationItem>
+          <PaginationNext href="#" />
+        </PaginationItem>
+      </PaginationContent>
+    </Pagination>
+  );
+}
 
 export function CustomBadge({ text }) {
   let variant = "default";
@@ -111,18 +150,6 @@ export default function ReportsPage() {
     });
   }, [keyword, status, reports]);
 
-  // async function handleFlagUser(type, id) {
-  //   try {
-  //     const { data } = await flagUser(type, id);
-  //     toast.success(data.message);
-
-  //     await loadUsers();
-  //   } catch (error) {
-  //     console.error(error);
-  //     toast.error(JSON.stringify(error));
-  //   }
-  // }
-
   return (
     <div className="container p-2 ">
       <div className="title-heading flex flex-col md:flex-row  md:justify-between justify-center items-start gap-2 md:items-center">
@@ -176,7 +203,7 @@ export default function ReportsPage() {
                 }}
               />
             </div>
-
+            <PaginationComponent />
             <Table className={"mt-4"}>
               <TableHeader className={"bg-muted"}>
                 <TableRow>
@@ -213,15 +240,17 @@ export default function ReportsPage() {
                       <TableCell>
                         <div className="flex flex-col">
                           <h2 className="text-md font-bold">
-                            {item.link.label}
+                            {item.link?.label || "link deleted."}
                           </h2>
-                          <a
-                            className="text-xs text-blue-400 font-semibold hover:underline"
-                            target="_blank"
-                            href={item.link.link}
-                          >
-                            {item.link.link}
-                          </a>
+                          {item.link && (
+                            <a
+                              className="text-xs text-blue-400 font-semibold hover:underline"
+                              target="_blank"
+                              href={item.link?.link || "#"}
+                            >
+                              {item.link?.link || "link deleted."}
+                            </a>
+                          )}
                         </div>
                       </TableCell>
                     )}
@@ -252,6 +281,7 @@ export default function ReportsPage() {
                 ))}
               </TableBody>
             </Table>
+            <PaginationComponent />
           </CardContent>
         </Card>
       </div>

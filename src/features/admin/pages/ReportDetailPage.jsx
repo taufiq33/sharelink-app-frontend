@@ -7,7 +7,12 @@ import { Eye } from "lucide-react";
 import { Link as LinkIcon } from "lucide-react";
 import { CircleAlert } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
-import { flagReport, getReportDetail } from "../api";
+import {
+  flagReport,
+  getReportDetail,
+  flagDoneReportAndAction,
+  warnUser,
+} from "../api";
 import { useState } from "react";
 import { useEffect } from "react";
 import { getUserProfilePictureUrl, formatDateTime } from "@/lib/utils";
@@ -45,6 +50,7 @@ import {
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { Textarea } from "@/components/ui/textarea";
+import { useForm } from "react-hook-form";
 
 export function CustomCard({ title, icon, children }) {
   return (
@@ -64,6 +70,7 @@ export default function ReportDetailPage() {
     relatedData: [],
   });
   const { id } = useParams();
+  const warnForm = useForm();
 
   async function fetchDetail(id) {
     setLoading(true);
@@ -83,6 +90,46 @@ export default function ReportDetailPage() {
     try {
       const { data } = await flagReport(id, mark);
       toast.success(data.message);
+      fetchDetail(id);
+    } catch (error) {
+      console.error(error);
+      toast.error(JSON.stringify(error));
+    }
+  }
+
+  async function handleMarkDoneAction(type, actionId) {
+    try {
+      const { data } = await flagDoneReportAndAction(id, { type, actionId });
+      toast.success(data.message);
+      fetchDetail(id);
+    } catch (error) {
+      console.error(error);
+      toast.error(JSON.stringify(error));
+    }
+  }
+
+  async function handleWarningSubmit(formData) {
+    const title =
+      report.data.type === "link"
+        ? "Your Link got reported. Please review."
+        : "Your profile got Reported. Please review";
+    const redirectUrl =
+      report.data.type === "link"
+        ? `/dashboard/links?linkId=${report.data?.link.id}`
+        : "";
+
+    const payload = {
+      userId: report.data.target.id,
+      title,
+      redirectUrl,
+      ...formData,
+    };
+
+    try {
+      const { data } = await warnUser(payload);
+
+      toast.success(data.message);
+      await markReport("done");
       fetchDetail(id);
     } catch (error) {
       console.error(error);
@@ -141,20 +188,24 @@ export default function ReportDetailPage() {
                   <DialogHeader>
                     <DialogTitle>Warn User</DialogTitle>
                     <DialogDescription>
-                      Review warning message.
+                      Review warning message. Report will be marked as 'done'
+                      after submitting form.
                     </DialogDescription>
                   </DialogHeader>
-                  <div className="no-scrollbar -mx-4 max-h-[50vh] overflow-y-auto px-4">
-                    <Textarea
-                      value={`Please review your link. Make sure your link does not violate our community standards \n \n Your link got reported with this message : \n  "${report.data?.reason}"`}
-                    />
-                  </div>
-                  <DialogFooter>
-                    <DialogClose asChild>
-                      <Button variant="outline">Cancel</Button>
-                    </DialogClose>
-                    <Button>Warn User</Button>
-                  </DialogFooter>
+                  <form onSubmit={warnForm.handleSubmit(handleWarningSubmit)}>
+                    <div className="no-scrollbar -mx-4 max-h-[50vh] overflow-y-auto px-4">
+                      <Textarea
+                        {...warnForm.register("message")}
+                        value={`Please review your link/profile. Make sure your link/profile does not violate our community standards \n \n Your link/profile got reported with this message : \n  "${report.data?.reason}"`}
+                      />
+                    </div>
+                    <DialogFooter className={"mt-4"}>
+                      <DialogClose asChild>
+                        <Button variant="outline">Cancel</Button>
+                      </DialogClose>
+                      <Button type="submit">Warn User</Button>
+                    </DialogFooter>
+                  </form>
                 </DialogContent>
               </Dialog>
               <ButtonGroupSeparator />
@@ -183,7 +234,18 @@ export default function ReportDetailPage() {
                   </AlertDialogHeader>
                   <AlertDialogFooter>
                     <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction>Continue</AlertDialogAction>
+                    <AlertDialogAction
+                      onClick={() => {
+                        handleMarkDoneAction(
+                          report.data.type,
+                          report.data.type === "link"
+                            ? report.data.link.id
+                            : report.data.target.id,
+                        );
+                      }}
+                    >
+                      Continue
+                    </AlertDialogAction>
                   </AlertDialogFooter>
                 </AlertDialogContent>
               </AlertDialog>
@@ -237,37 +299,45 @@ export default function ReportDetailPage() {
 
             {report.data.type === "link" ? (
               <div className="bg-muted px-2 py-4">
-                <h2 className="font-bold">{report.data?.link?.label}</h2>
-                <Link
-                  target="_blank"
-                  className="text-sm underline text-blue-700"
-                  to={report.data?.link?.link}
-                >
-                  {report.data?.link?.link}
-                </Link>
-                <div className="flex gap-4 text-sm my-2 italic">
-                  <span>
-                    <Eye className="inline w-4 h-4" />
-                    {report.data?.link?.clickCount} clicks
-                  </span>
-                  <span>
-                    <Calendar className="inline w-4 h-4" />{" "}
-                    {formatDateTime(report.data.link?.createdAt)}
-                  </span>
-                  <div className="flex gap-2 justify-center items-center text-sm">
-                    <Avatar className={"h-5 w-5"}>
-                      <AvatarImage
-                        src={getUserProfilePictureUrl(
-                          report.data.target?.username,
-                        )}
-                      />
-                      <AvatarFallback>
-                        {report.data?.target?.username}
-                      </AvatarFallback>
-                    </Avatar>
-                    <h3>{report.data?.target?.username}</h3>
-                  </div>
-                </div>
+                <h2 className="font-bold">
+                  {report.data?.link?.label || "link deleted"}
+                </h2>
+                {report.data.link && (
+                  <>
+                    {" "}
+                    <Link
+                      target="_blank"
+                      className="text-sm underline text-blue-700"
+                      to={report.data?.link?.link}
+                    >
+                      {report.data?.link?.link}
+                    </Link>
+                    <div className="flex gap-4 text-sm my-2 italic">
+                      <span>
+                        <Eye className="inline w-4 h-4" />
+                        {report.data?.link?.clickCount} clicks
+                      </span>
+                      <span>
+                        <Calendar className="inline w-4 h-4" />{" "}
+                        {formatDateTime(report.data.link?.createdAt)}
+                      </span>
+
+                      <div className="flex gap-2 justify-center items-center text-sm">
+                        <Avatar className={"h-5 w-5"}>
+                          <AvatarImage
+                            src={getUserProfilePictureUrl(
+                              report.data.target?.username,
+                            )}
+                          />
+                          <AvatarFallback>
+                            {report.data?.target?.username}
+                          </AvatarFallback>
+                        </Avatar>
+                        <h3>{report.data?.target?.username}</h3>
+                      </div>
+                    </div>
+                  </>
+                )}
               </div>
             ) : (
               <div className="bg-muted px-2 py-4">

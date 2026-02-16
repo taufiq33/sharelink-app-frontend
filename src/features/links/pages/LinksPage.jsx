@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { useSearchParams } from "react-router-dom";
 import {
   DialogContent,
   Dialog,
@@ -40,6 +41,8 @@ export default function LinksPage() {
   const [orderChange, setOrderChange] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [selectedEditId, setSelectedEditId] = useState(null);
+  const [searchParams] = useSearchParams();
+  const highlightLinkId = searchParams.get("linkId");
 
   const touchSensor = useSensor(TouchSensor);
   const defaultSensor = useSensor(PointerSensor);
@@ -267,6 +270,7 @@ export default function LinksPage() {
                 onHandleDeleteLink={handleDeleteLink}
                 onUpOrder={() => handleUpOrder(index)}
                 onDownOrder={() => handleDownOrder(index)}
+                highlight={highlightLinkId === item.id}
               />
             ))}
           </SortableContext>

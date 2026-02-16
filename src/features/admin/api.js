@@ -83,3 +83,21 @@ export async function flagReport(id, mark) {
     return Promise.reject(error.response.data);
   }
 }
+
+export async function flagDoneReportAndAction(id, data) {
+  try {
+    const request = await baseApi.post(`/admin/reports/markAction/${id}`, data);
+    return request.data;
+  } catch (error) {
+    return Promise.reject(error.response.data);
+  }
+}
+
+export async function warnUser(data) {
+  try {
+    const request = await baseApi.post(`/admin/notification`, data);
+    return request.data;
+  } catch (error) {
+    return Promise.reject(error.response.data);
+  }
+}
